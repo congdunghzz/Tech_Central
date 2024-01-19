@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "product_image")
 public class ProductImage {
     @Id
     @Column(name = "PRODUCT_IMAGE_ID")

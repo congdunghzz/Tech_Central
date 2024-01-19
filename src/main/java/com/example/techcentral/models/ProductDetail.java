@@ -10,7 +10,6 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name = "product_detail")
-
 public class ProductDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +32,9 @@ public class ProductDetail {
 
     @Column(name = "MATERIAL")
     private String material;
+
+    @Column(name = "COLOR")
+    private String color;
 
     @OneToOne
     @JoinColumn(name = "PRODUCT_ID")

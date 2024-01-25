@@ -36,7 +36,7 @@ public class ProductDetail {
     @Column(name = "COLOR")
     private String color;
 
-    @OneToOne
+    @OneToOne(mappedBy = "productDetail",cascade = CascadeType.PERSIST)
     @JoinColumn(name = "PRODUCT_ID")
     Product product;
 

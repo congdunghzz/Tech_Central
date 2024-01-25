@@ -1,5 +1,6 @@
 package com.example.techcentral.models;
 
+import com.example.techcentral.models.enums.Gender;
 import com.example.techcentral.models.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +24,8 @@ public class User {
     private String name;
 
     @Column(name = "GENDER")
-    private boolean gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(name = "DOB")
     private Date dob;

@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
+@ToString
 @Table(name = "product")
 public class Product {
     @Id
@@ -24,14 +25,14 @@ public class Product {
     @Column(name = "PRODUCT_PRICE")
     private double price;
 
-    @OneToMany(mappedBy = "products")
+    @OneToMany(mappedBy = "products", cascade = CascadeType.ALL)
     private List<ProductImage> productImages;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn (name = "CATEGORY_ID")
     Category category;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "DETAIL_ID")
     ProductDetail productDetail;
 }

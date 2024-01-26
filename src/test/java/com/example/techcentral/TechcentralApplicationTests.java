@@ -38,12 +38,12 @@ class TechcentralApplicationTests {
 				.price(2500)
 				.category(category)
 				.productDetail(detail)
-				.build();*/
+				.build();
+		productRepository.save(product);*/
 		List<Product> result = productRepository.findAll();
-		/*Optional<Product> result = productRepository.findById(8L);*/
-		result.stream().forEach(System.out ::println);
-		/*Product result = productRepository.getById(4L);
-		System.out.println(result);*/
+		System.out.println(result);
+		/*result.stream().forEach(System.out ::println);*/
+
 
 	}
 }

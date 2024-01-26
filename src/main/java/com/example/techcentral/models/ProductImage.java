@@ -1,5 +1,6 @@
 package com.example.techcentral.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Entity
 @Table(name = "product_image")
 public class ProductImage {
@@ -20,6 +22,7 @@ public class ProductImage {
     private String url;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "PRODUCT_ID")
     private Product products;
 }

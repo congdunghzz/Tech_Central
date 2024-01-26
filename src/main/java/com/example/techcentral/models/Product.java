@@ -1,5 +1,6 @@
 package com.example.techcentral.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,10 +26,11 @@ public class Product {
     @Column(name = "PRODUCT_PRICE")
     private double price;
 
-    @OneToMany(mappedBy = "products", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "products", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductImage> productImages;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn (name = "CATEGORY_ID")
     Category category;
 

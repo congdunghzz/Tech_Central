@@ -1,5 +1,6 @@
 package com.example.techcentral.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Entity
 @Table(name = "product_detail")
 public class ProductDetail {
@@ -37,7 +39,7 @@ public class ProductDetail {
     private String color;
 
     @OneToOne(mappedBy = "productDetail",cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "PRODUCT_ID")
+    @JsonIgnore
     Product product;
 
 }

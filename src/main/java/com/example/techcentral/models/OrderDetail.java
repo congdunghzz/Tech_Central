@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Entity
 @Table(name = "order_detail")
 public class OrderDetail {
@@ -26,7 +27,7 @@ public class OrderDetail {
     @Column(name = "COST", nullable = false)
     private int cost;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ORDER_ID")
     private Order order;
 }

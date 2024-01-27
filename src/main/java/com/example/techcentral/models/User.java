@@ -2,6 +2,7 @@ package com.example.techcentral.models;
 
 import com.example.techcentral.models.enums.Gender;
 import com.example.techcentral.models.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,6 +51,7 @@ public class User {
     @Column(name = "PASSWORD")
     private String password;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Order> orders;
 }

@@ -1,5 +1,6 @@
 package com.example.techcentral.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,7 @@ public class OrderDetail {
     @Column(name = "COST", nullable = false)
     private int cost;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ORDER_ID")
     private Order order;

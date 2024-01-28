@@ -31,9 +31,9 @@ public class Product {
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn (name = "CATEGORY_ID")
-    Category category;
+    private Category category;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "DETAIL_ID")
-    ProductDetail productDetail;
+    private ProductDetail productDetail;
 }

@@ -1,0 +1,35 @@
+[33mcommit f4b39ca8a921f7df9d6456f45ff0c7702a6b6364[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: congdunghzz <lebaoduy023502@gmail.com>
+Date:   Sat Jan 27 20:01:10 2024 +0700
+
+    fix category
+
+[33mcommit 1bd83941b429551e7b87a67c291e820437b7e2ff[m
+Author: congdunghzz <lebaoduy023502@gmail.com>
+Date:   Fri Jan 26 11:27:21 2024 +0700
+
+    fix json recusion
+
+[33mcommit f19380db6fcd667bcaa801c260a8a03ce02af9f3[m
+Author: congdunghzz <lebaoduy023502@gmail.com>
+Date:   Thu Jan 25 08:05:25 2024 +0700
+
+    update moddel
+
+[33mcommit 265e92f6ece6f98b3ad7fe452bd6c2f98a8901c4[m
+Author: congdunghzz <lebaoduy023502@gmail.com>
+Date:   Sat Jan 20 01:03:17 2024 +0700
+
+    finish first database design
+
+[33mcommit 506e0103a211b7e950749c02fab5ab9bd8b491f7[m
+Author: congdunghzz <lebaoduy023502@gmail.com>
+Date:   Fri Jan 19 20:52:50 2024 +0700
+
+    add README file
+
+[33mcommit fe013d9412a034c8d09022ef9029807dd3f80020[m
+Author: congdunghzz <lebaoduy023502@gmail.com>
+Date:   Fri Jan 19 20:41:51 2024 +0700
+
+    first commit

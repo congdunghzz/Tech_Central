@@ -32,21 +32,15 @@ public class User {
     @Column(name = "DOB")
     private Date dob;
 
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", unique = true)
     private String email;
 
     @Column(name = "PHONE")
     private String phone;
 
-    @Column(name = "ADDRESS")
-    private String address;
-
     @Column(name = "ROLE")
     @Enumerated(EnumType.STRING)
     private UserRole role;
-
-    @Column(name = "USER_NAME")
-    private String user_name;
 
     @Column(name = "PASSWORD")
     private String password;

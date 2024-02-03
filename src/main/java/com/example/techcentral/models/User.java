@@ -1,7 +1,7 @@
 package com.example.techcentral.models;
 
-import com.example.techcentral.models.enums.Gender;
-import com.example.techcentral.models.enums.UserRole;
+import com.example.techcentral.enums.Gender;
+import com.example.techcentral.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

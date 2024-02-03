@@ -1,7 +1,6 @@
 package com.example.techcentral.controller;
 
 import com.example.techcentral.dto.ProductDTO;
-import com.example.techcentral.models.Product;
 import com.example.techcentral.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,7 @@ public class ProductController {
         if (result != null){
             return new ResponseEntity<>(result, HttpStatus.OK);
         }else {
-            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
     @PostMapping
@@ -37,7 +36,7 @@ public class ProductController {
         ProductDTO result = productService.addProduct(productDTO);
         if (result != null) {
             return new ResponseEntity<>(result, HttpStatus.CREATED);
-        }else return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }else return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
     }
 
@@ -49,5 +48,14 @@ public class ProductController {
         }else {
             return new ResponseEntity<>("Encounter an error", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id,
+                                                    @RequestBody ProductDTO productDTO){
+        ProductDTO result = productService.editProduct(id,productDTO);
+        if (result != null) {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }else return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 }

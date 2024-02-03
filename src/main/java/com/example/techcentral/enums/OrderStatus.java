@@ -1,4 +1,4 @@
-package com.example.techcentral.models.enums;
+package com.example.techcentral.enums;
 
 public enum OrderStatus {
     PROCESSING, SHIPPED;

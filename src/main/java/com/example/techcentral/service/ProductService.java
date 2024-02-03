@@ -5,6 +5,7 @@ import com.example.techcentral.dto.ProductDTO;
 import com.example.techcentral.dto.mapper.ProductMapper;
 import com.example.techcentral.models.Category;
 import com.example.techcentral.models.Product;
+import com.example.techcentral.models.ProductDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +51,7 @@ public class ProductService {
         if (category.isPresent()){
             product.setCategory(category.get());
         }else {
-            System.out.println("Product Service: Category Error");
+            System.out.println("Product Service: Category is not be found");
             return null;
         }
         productRepository.save(product);
@@ -67,10 +68,43 @@ public class ProductService {
 
     public ProductDTO findOneById(Long id){
         Optional<Product> product = productRepository.findById(id);
-        if (product.isPresent()){
-            return ProductMapper.TransferToProductDTO(product.get());
-        }else {
+        return product.map(ProductMapper::TransferToProductDTO).orElse(null);
+    }
+
+    public ProductDTO editProduct(Long id,ProductDTO productDTO){
+        ProductDTO result;
+        Optional<Product> product = productRepository.findById(id);
+        if (!product.isPresent()){
+            System.out.println("Product Service: Product is not be found");
             return null;
         }
+
+        //Update name, price.
+        Product updatedProduct = product.get();
+        updatedProduct.setName(productDTO.name());
+        updatedProduct.setPrice(productDTO.price());
+        // check category if it is present
+        Optional<Category> category = categoryRepository.findById(productDTO.category_id());
+        // if category is present, set it for product. if it is not, break the function
+        if (category.isPresent()){
+            if (!category.get().getId().equals(updatedProduct.getCategory().getId()))
+                updatedProduct.setCategory(category.get());
+        }else {
+            System.out.println("Product Service: Category is not be found");
+            return null;
+        }
+
+        if (!updatedProduct.getProductDetail().equals(productDTO.productDetail())){
+
+            updatedProduct.getProductDetail().setRam(productDTO.productDetail().getRam());
+            updatedProduct.getProductDetail().setCpu(productDTO.productDetail().getCpu());
+            updatedProduct.getProductDetail().setColor(productDTO.productDetail().getColor());
+            updatedProduct.getProductDetail().setRom(productDTO.productDetail().getRom());
+            updatedProduct.getProductDetail().setMaterial(productDTO.productDetail().getMaterial());
+            updatedProduct.getProductDetail().setResolution(productDTO.productDetail().getResolution());
+            updatedProduct.getProductDetail().setScreen(productDTO.productDetail().getScreen());
+        }
+        result = ProductMapper.TransferToProductDTO(productRepository.save(updatedProduct));
+        return result;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.techcentral.models;
 
-import com.example.techcentral.models.enums.OrderStatus;
+import com.example.techcentral.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

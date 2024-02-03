@@ -1,7 +1,7 @@
 package com.example.techcentral.dto;
 
-import com.example.techcentral.models.enums.Gender;
-import com.example.techcentral.models.enums.UserRole;
+import com.example.techcentral.enums.Gender;
+import com.example.techcentral.enums.UserRole;
 
 
 import java.sql.Date;

@@ -33,7 +33,7 @@ public class Product {
     @JoinColumn (name = "CATEGORY_ID")
     private Category category;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "DETAIL_ID")
     private ProductDetail productDetail;
 }

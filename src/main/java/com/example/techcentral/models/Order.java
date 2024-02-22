@@ -21,6 +21,15 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "CUSTOMER_NAME")
+    private String name;
+
+    @Column(name = "ORDER_ADDRESS")
+    private String address;
+
+    @Column(name = "CUSTOMER_PHONE")
+    private String phone;
+
     @Column(name = "ORDER_DATE")
     private Date orderDate;
 
@@ -31,10 +40,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 }

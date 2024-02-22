@@ -26,10 +26,10 @@ public class OrderDetail {
     private int amount;
 
     @Column(name = "COST", nullable = false)
-    private int cost;
+    private double cost;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDER_ID")
     private Order order;
 }

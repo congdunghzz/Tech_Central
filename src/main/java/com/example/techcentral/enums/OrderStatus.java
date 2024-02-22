@@ -1,5 +1,5 @@
 package com.example.techcentral.enums;
 
 public enum OrderStatus {
-    PROCESSING, SHIPPED;
+    PROCESSING, SHIPPING ,SHIPPED;
 }

@@ -1,7 +1,9 @@
 package com.example.techcentral;
 
+import com.example.techcentral.dao.OrderRepository;
 import com.example.techcentral.dao.ProductRepository;
 import com.example.techcentral.models.Category;
+import com.example.techcentral.models.Order;
 import com.example.techcentral.models.Product;
 import com.example.techcentral.models.ProductDetail;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,9 @@ import java.util.Optional;
 class TechcentralApplicationTests {
 	@Autowired
 	ProductRepository productRepository;
+	@Autowired
+	OrderRepository orderRepository;
+
 	@Test
 	void contextLoads() {
 	}
@@ -45,5 +50,11 @@ class TechcentralApplicationTests {
 		/*result.stream().forEach(System.out ::println);*/
 
 
+	}
+
+	@Test
+	void orderByDate(){
+		List<Order> orders = orderRepository.findByUserIdOrderByOrderDateDesc(1L);
+		orders.forEach(System.out::println);
 	}
 }

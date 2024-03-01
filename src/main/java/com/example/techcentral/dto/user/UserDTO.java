@@ -1,7 +1,8 @@
-package com.example.techcentral.dto;
+package com.example.techcentral.dto.user;
 
 import com.example.techcentral.enums.Gender;
 import com.example.techcentral.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 import java.sql.Date;
@@ -13,7 +14,6 @@ public record UserDTO(
          Date dob,
          String email,
          String phone,
-         UserRole role,
-         String password
+         UserRole role
 ) {
 }

@@ -7,6 +7,7 @@ import com.example.techcentral.models.Category;
 import com.example.techcentral.models.Product;
 import com.example.techcentral.models.ProductDetail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +36,6 @@ public class ProductService {
     public ProductDTO addProduct(ProductDTO productDTO) {
 
         Product product = Product.builder()
-                .id(productDTO.id())
                 .name(productDTO.name())
                 .price(productDTO.price())
                 .productDetail(productDTO.productDetail())
@@ -54,7 +54,11 @@ public class ProductService {
             System.out.println("Product Service: Category is not be found");
             return null;
         }
-        productRepository.save(product);
+        try{
+            productRepository.save(product);
+        }catch (DataIntegrityViolationException exception){
+            throw new DataIntegrityViolationException("Some data is duplicated");
+        }
 
         return ProductMapper.TransferToProductDTO(product);
     }
@@ -74,7 +78,7 @@ public class ProductService {
     public ProductDTO editProduct(Long id,ProductDTO productDTO){
         ProductDTO result;
         Optional<Product> product = productRepository.findById(id);
-        if (!product.isPresent()){
+        if (product.isEmpty()){
             System.out.println("Product Service: Product is not be found");
             return null;
         }

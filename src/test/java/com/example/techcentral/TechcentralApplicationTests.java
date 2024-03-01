@@ -2,6 +2,7 @@ package com.example.techcentral;
 
 import com.example.techcentral.dao.OrderRepository;
 import com.example.techcentral.dao.ProductRepository;
+import com.example.techcentral.dao.UserRepository;
 import com.example.techcentral.models.Category;
 import com.example.techcentral.models.Order;
 import com.example.techcentral.models.Product;
@@ -19,6 +20,8 @@ class TechcentralApplicationTests {
 	ProductRepository productRepository;
 	@Autowired
 	OrderRepository orderRepository;
+	@Autowired
+	UserRepository userRepository;
 
 	@Test
 	void contextLoads() {
@@ -56,5 +59,11 @@ class TechcentralApplicationTests {
 	void orderByDate(){
 		List<Order> orders = orderRepository.findByUserIdOrderByOrderDateDesc(1L);
 		orders.forEach(System.out::println);
+	}
+
+	@Test
+	void testGetId(){
+		Optional<Long> id = userRepository.findIdByEmail("lebaoduy@gmail.com");
+		System.out.println(id.get());
 	}
 }

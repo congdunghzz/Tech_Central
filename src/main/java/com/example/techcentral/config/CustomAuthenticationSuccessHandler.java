@@ -28,7 +28,9 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String email = authentication.getName();
         Long userId = userService.getIdByEmail(email);
         Cookie cookie = new Cookie("userId", userId.toString());
+        cookie.setMaxAge(60*60);
         response.addCookie(cookie);
+
         super.onAuthenticationSuccess(request,response,authentication);
     }
 }

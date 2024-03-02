@@ -39,6 +39,14 @@ public class UserService implements UserDetailsService{
         return new CustomUserDetail(user.get());
     }
 
+    public UserDetails loadUserById(Long id) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()){
+            throw new  UsernameNotFoundException(id.toString());
+        }
+        return new CustomUserDetail(user.get());
+    }
+
     public UserDTO getById (Long userId){
         Optional<User> user = userRepository.findById(userId);
         return user.map(UserMapper::TransferToUserDTO).orElse(null);

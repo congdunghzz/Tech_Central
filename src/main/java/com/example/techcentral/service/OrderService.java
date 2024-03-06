@@ -1,5 +1,7 @@
 package com.example.techcentral.service;
 
+import com.example.techcentral.ExceptionHandler.NotFoundException;
+import com.example.techcentral.ExceptionHandler.UnAuthorizedException;
 import com.example.techcentral.dao.OrderRepository;
 import com.example.techcentral.dao.ProductRepository;
 import com.example.techcentral.dao.UserRepository;
@@ -34,7 +36,9 @@ public class OrderService {
 
     public Order findOneById (Long orderId){
         Optional<Order> result = orderRepository.findById(orderId);
-        return result.orElse(null);
+        if (result.isEmpty())
+            throw new NotFoundException("Order with id: " +orderId+ " is not found");
+        return result.get();
     }
 
     public List<Order> findAll (){
@@ -59,7 +63,8 @@ public class OrderService {
             Optional<Product> product = productRepository.findById(item.productId());
 
             //check product if it is present
-            if (product.isEmpty()) return null;
+            if (product.isEmpty())
+                throw new NotFoundException("Product with id: " +item.productId()+ " is not found");;
 
             totalCost += product.get().getPrice() * item.amount();
             details.add(OrderDetail
@@ -86,19 +91,34 @@ public class OrderService {
 
     public Order updateStatus(Long orderId, OrderStatus status){
         Optional<Order> order = orderRepository.findById(orderId);
-        if (order.isEmpty()) return null;
+        if (order.isEmpty())
+            throw new NotFoundException("Order with id: " +orderId+ " is not found");;
         order.get().setOrderStatus(status);
         return orderRepository.save(order.get());
     }
 
-    public boolean deleteOrder (Long orderId){
+    public boolean deleteOrderForAdmin(Long orderId){
         Optional<Order> order = orderRepository.findById(orderId);
         if (order.isEmpty()) return false;
         try{
             orderRepository.deleteById(orderId);
             return true;
         }catch (Exception e){
-            return false;
+            throw new NotFoundException("Order with id: " +orderId+ " is not found");
+        }
+    }
+
+    public boolean deleteOrderForCustomer (Long orderId){
+        Optional<Order> order = orderRepository.findById(orderId);
+        if (order.isEmpty()) return false;
+        if (order.get().getOrderStatus() != OrderStatus.PROCESSING){
+            throw new UnAuthorizedException("You are not permitted to delete order: " +orderId);
+        }
+        try{
+            orderRepository.deleteById(orderId);
+            return true;
+        }catch (Exception e){
+            throw new UnAuthorizedException("You are not permitted to delete order: " +orderId);
         }
     }
 }

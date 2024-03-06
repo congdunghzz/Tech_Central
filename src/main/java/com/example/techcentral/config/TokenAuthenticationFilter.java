@@ -29,19 +29,17 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         Cookie[] cookies = request.getCookies();
-        boolean isAuthenticated = false;
 
-        Long userId = 0L;
+        long userId = -1L;
         if (cookies != null){
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("userId")){
-                    userId = Long.valueOf(cookie.getValue());
-                    isAuthenticated = true;
+                    userId = Long.parseLong(cookie.getValue());
                     break;
                 }
             }
         }
-        if (userId != 0 && isAuthenticated){
+        if (userId != -1){
             UserDetails userDetail = (userService.loadUserById(userId));
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetail,
                     null,

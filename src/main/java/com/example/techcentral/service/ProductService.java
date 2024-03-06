@@ -1,11 +1,11 @@
 package com.example.techcentral.service;
+import com.example.techcentral.ExceptionHandler.NotFoundException;
 import com.example.techcentral.dao.CategoryRepository;
 import com.example.techcentral.dao.ProductRepository;
 import com.example.techcentral.dto.ProductDTO;
 import com.example.techcentral.dto.mapper.ProductMapper;
 import com.example.techcentral.models.Category;
 import com.example.techcentral.models.Product;
-import com.example.techcentral.models.ProductDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -67,20 +67,22 @@ public class ProductService {
         try {
             productRepository.deleteById(id);
             return true;
-        }catch (Exception e){return false;}
+        }catch (Exception e){
+            throw new NotFoundException("Product with id: " +id+ " is not found");
+        }
     }
 
     public ProductDTO findOneById(Long id){
         Optional<Product> product = productRepository.findById(id);
-        return product.map(ProductMapper::TransferToProductDTO).orElse(null);
+        if (product.isEmpty()) throw new NotFoundException("Product with id: " +id+ " is not found");
+        return ProductMapper.TransferToProductDTO(product.get());
     }
 
     public ProductDTO editProduct(Long id,ProductDTO productDTO){
         ProductDTO result;
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()){
-            System.out.println("Product Service: Product is not be found");
-            return null;
+            throw new NotFoundException("Product with id: " +id+ " is not found");
         }
 
         //Update name, price.
@@ -94,8 +96,7 @@ public class ProductService {
             if (!category.get().getId().equals(updatedProduct.getCategory().getId()))
                 updatedProduct.setCategory(category.get());
         }else {
-            System.out.println("Product Service: Category is not be found");
-            return null;
+            throw new NotFoundException("Category with id: " +productDTO.category_id()+ " is not found");
         }
 
         if (!updatedProduct.getProductDetail().equals(productDTO.productDetail())){

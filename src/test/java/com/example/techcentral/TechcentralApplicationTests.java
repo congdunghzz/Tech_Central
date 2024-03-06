@@ -10,6 +10,7 @@ import com.example.techcentral.models.ProductDetail;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,5 +66,10 @@ class TechcentralApplicationTests {
 	void testGetId(){
 		Optional<Long> id = userRepository.findIdByEmail("lebaoduy@gmail.com");
 		System.out.println(id.get());
+	}
+
+	@Test
+	void testStatuscode(){
+		System.out.println(HttpStatus.NOT_FOUND.value());
 	}
 }

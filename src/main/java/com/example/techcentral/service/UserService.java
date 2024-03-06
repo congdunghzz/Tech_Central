@@ -1,5 +1,6 @@
 package com.example.techcentral.service;
 
+import com.example.techcentral.ExceptionHandler.NotFoundException;
 import com.example.techcentral.dao.UserRepository;
 import com.example.techcentral.dto.user.CustomUserDetail;
 import com.example.techcentral.dto.user.UserDTO;
@@ -49,7 +50,8 @@ public class UserService implements UserDetailsService{
 
     public UserDTO getById (Long userId){
         Optional<User> user = userRepository.findById(userId);
-        return user.map(UserMapper::TransferToUserDTO).orElse(null);
+        if (user.isEmpty()) throw new NotFoundException("User with id: " +userId + " is not found");
+        return UserMapper.TransferToUserDTO(user.get());
     }
 
     public List<UserDTO> getAllUser(){
@@ -60,6 +62,7 @@ public class UserService implements UserDetailsService{
         if (userRepository.existsByEmail(request.getEmail())){
             return null;
         }
+        User createdUser;
         User user = User
                 .builder()
                 .name(request.getName())
@@ -71,11 +74,10 @@ public class UserService implements UserDetailsService{
                 .role(UserRole.USER)
                 .build();
         try{
-            userRepository.save(user);
+            createdUser = userRepository.save(user);
         }catch (DataIntegrityViolationException exception){
             throw new DataIntegrityViolationException("data is duplicated");
         }
-        User createdUser = userRepository.findByEmail(user.getEmail()).get();
         return UserMapper.TransferToUserDTO(createdUser);
     }
 
@@ -90,8 +92,7 @@ public class UserService implements UserDetailsService{
     public UserDTO editInfo(Long id,UserRegisterRequest request){
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()){
-            System.out.println("User Service: User is not be found");
-            return null;
+           throw new NotFoundException("User with id: " +id+ " is not found");
         }
 
         user.get().setName(request.getName());
@@ -107,8 +108,7 @@ public class UserService implements UserDetailsService{
     public boolean deleteUser(Long id){
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()){
-            System.out.println("User Service: User is not be found");
-            return false;
+            throw new NotFoundException("User with id: " +id+ " is not found");
         }
         userRepository.deleteById(id);
         return true;

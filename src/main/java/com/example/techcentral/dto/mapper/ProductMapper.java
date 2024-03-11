@@ -1,12 +1,11 @@
 package com.example.techcentral.dto.mapper;
 
-import com.example.techcentral.dto.ProductDTO;
+import com.example.techcentral.dto.product.ProductDTO;
 
 import com.example.techcentral.models.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductMapper {

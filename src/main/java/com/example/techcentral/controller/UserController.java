@@ -55,7 +55,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Map<String,String>> deleteUser(@PathVariable Long id){
         Map<String,String> result = new HashMap<>();
         HttpStatus status;
@@ -67,5 +67,18 @@ public class UserController {
             status = HttpStatus.BAD_REQUEST;
         }
         return new ResponseEntity<>(result, status);
+    }
+
+    
+    @PutMapping("/admin/{id}")
+    public ResponseEntity<UserDTO> updateToAdminRole (@PathVariable Long id){
+        UserDTO userDto = userService.changeUserRoleToAdmin(id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<List<UserDTO>> getAllAdmin(){
+        List<UserDTO> adminList = userService.getAllAdmin();
+        return ResponseEntity.ok().body(adminList);
     }
 }

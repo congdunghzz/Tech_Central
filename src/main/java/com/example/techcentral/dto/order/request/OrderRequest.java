@@ -10,6 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderRequest {
-    private OrderRequestDTO orderDTO;
+    private String address;
+    private String phone;
+    private String name;
     private List<OrderDetailRequestDTO> orderDetailRequestDTOs;
 }

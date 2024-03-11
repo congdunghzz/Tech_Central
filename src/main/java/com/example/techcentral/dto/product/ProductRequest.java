@@ -1,18 +1,18 @@
-package com.example.techcentral.dto;
+package com.example.techcentral.dto.product;
 
 import com.example.techcentral.models.ProductDetail;
 import com.example.techcentral.models.ProductImage;
-import jakarta.persistence.Column;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public record ProductDTO(
-        Long id,
+public record ProductRequest(
         String name,
         double price,
-        List<ProductImage> productImages,
         ProductDetail productDetail,
+        List<MultipartFile> images,
         Long category_id
-    ) {
+) {
 
 }
+

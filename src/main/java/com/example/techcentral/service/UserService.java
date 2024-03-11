@@ -1,5 +1,6 @@
 package com.example.techcentral.service;
 
+import com.example.techcentral.ExceptionHandler.ExistException;
 import com.example.techcentral.ExceptionHandler.NotFoundException;
 import com.example.techcentral.dao.UserRepository;
 import com.example.techcentral.dto.user.CustomUserDetail;
@@ -60,7 +61,7 @@ public class UserService implements UserDetailsService{
 
     public UserDTO createUser(UserRegisterRequest request){
         if (userRepository.existsByEmail(request.getEmail())){
-            return null;
+            throw new ExistException("user with email: " + request.getEmail()+" have existed");
         }
         User createdUser;
         User user = User
@@ -73,11 +74,9 @@ public class UserService implements UserDetailsService{
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(UserRole.USER)
                 .build();
-        try{
-            createdUser = userRepository.save(user);
-        }catch (DataIntegrityViolationException exception){
-            throw new DataIntegrityViolationException("data is duplicated");
-        }
+
+        createdUser = userRepository.save(user);
+
         return UserMapper.TransferToUserDTO(createdUser);
     }
 
@@ -112,5 +111,22 @@ public class UserService implements UserDetailsService{
         }
         userRepository.deleteById(id);
         return true;
+    }
+
+    public UserDTO changeUserRoleToAdmin (Long userId){
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new NotFoundException("User with id: "+userId+"is not found or this user is already a admin");
+        }
+        user.get().setRole(UserRole.ADMIN);
+        User updatedUser = userRepository.save(user.get());
+        return UserMapper.TransferToUserDTO(updatedUser);
+    }
+
+    public List<UserDTO> getAllAdmin(){
+        List<User> adminList = userRepository.findAllByUserRole(UserRole.ADMIN);
+        if (adminList.isEmpty())
+            throw new NotFoundException("There is no admin");
+        return UserMapper.TransferToUserDTOs(adminList);
     }
 }

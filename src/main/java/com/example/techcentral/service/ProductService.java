@@ -2,7 +2,7 @@ package com.example.techcentral.service;
 import com.example.techcentral.ExceptionHandler.NotFoundException;
 import com.example.techcentral.dao.CategoryRepository;
 import com.example.techcentral.dao.ProductRepository;
-import com.example.techcentral.dto.ProductDTO;
+import com.example.techcentral.dto.product.ProductDTO;
 import com.example.techcentral.dto.mapper.ProductMapper;
 import com.example.techcentral.models.Category;
 import com.example.techcentral.models.Product;
@@ -51,8 +51,7 @@ public class ProductService {
         if (category.isPresent()){
             product.setCategory(category.get());
         }else {
-            System.out.println("Product Service: Category is not be found");
-            return null;
+            throw new NotFoundException("Category with id: " +productDTO.category_id()+ " is not found");
         }
         try{
             productRepository.save(product);

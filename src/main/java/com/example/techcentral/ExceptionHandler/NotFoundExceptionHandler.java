@@ -13,6 +13,6 @@ public class NotFoundExceptionHandler {
     public ResponseEntity<ErrorResponse> exceptionHandler(NotFoundException e){
         int statusCode = HttpStatus.NOT_FOUND.value();
         ErrorResponse response = new ErrorResponse(e.getMessage(), statusCode);
-        return new ResponseEntity<ErrorResponse>(response, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

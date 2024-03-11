@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -42,7 +43,7 @@ public class OrderService {
     }
 
     public List<Order> findAll (){
-        return orderRepository.findAll();
+        return orderRepository.findAllByOrderByOrderDateDesc();
     }
 
     public List<Order> findAllByUser(Long userId){
@@ -53,18 +54,20 @@ public class OrderService {
 
         // check user if it is present
         Optional<User> user = userRepository.findById(userId);
-        if (user.isEmpty()) return null;
+        if (user.isEmpty())
+            throw new NotFoundException("User with id: " +userId+" was not found");
 
         List<OrderDetail> details = new ArrayList<>();
         double totalCost = 0;
 
         // get order detail list
+
         for (OrderDetailRequestDTO item : request.getOrderDetailRequestDTOs()){
             Optional<Product> product = productRepository.findById(item.productId());
 
             //check product if it is present
             if (product.isEmpty())
-                throw new NotFoundException("Product with id: " +item.productId()+ " is not found");;
+                throw new NotFoundException("Product with id: " +item.productId()+ " is not found");
 
             totalCost += product.get().getPrice() * item.amount();
             details.add(OrderDetail
@@ -76,9 +79,9 @@ public class OrderService {
         }
         Order newOrder = Order
                 .builder()
-                .name(request.getOrderDTO().name())
-                .address(request.getOrderDTO().Address())
-                .phone(request.getOrderDTO().phone())
+                .name(request.getName())
+                .address(request.getAddress())
+                .phone(request.getPhone())
                 .orderDate(new Date(System.currentTimeMillis()))
                 .totalCost(totalCost)
                 .orderStatus(OrderStatus.PROCESSING)
@@ -97,28 +100,28 @@ public class OrderService {
         return orderRepository.save(order.get());
     }
 
-    public boolean deleteOrderForAdmin(Long orderId){
+    public void deleteOrderForAdmin(Long orderId){
         Optional<Order> order = orderRepository.findById(orderId);
-        if (order.isEmpty()) return false;
+        if (order.isEmpty())
+            throw new NotFoundException("Order with id: " +orderId+ " is not found");
         try{
             orderRepository.deleteById(orderId);
-            return true;
         }catch (Exception e){
             throw new NotFoundException("Order with id: " +orderId+ " is not found");
         }
     }
 
-    public boolean deleteOrderForCustomer (Long orderId){
+    public void deleteOrderForCustomer (Long orderId, Long userId){
         Optional<Order> order = orderRepository.findById(orderId);
-        if (order.isEmpty()) return false;
-        if (order.get().getOrderStatus() != OrderStatus.PROCESSING){
+        if (order.isEmpty())
+            throw new NotFoundException("Order with id: " +orderId+" was not found");
+
+        if (order.get().getOrderStatus() != OrderStatus.PROCESSING &&
+                !Objects.equals(userId, order.get().getUser().getId())){
+
             throw new UnAuthorizedException("You are not permitted to delete order: " +orderId);
         }
-        try{
             orderRepository.deleteById(orderId);
-            return true;
-        }catch (Exception e){
-            throw new UnAuthorizedException("You are not permitted to delete order: " +orderId);
-        }
+
     }
 }

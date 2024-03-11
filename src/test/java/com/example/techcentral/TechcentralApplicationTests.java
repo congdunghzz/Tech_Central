@@ -3,10 +3,12 @@ package com.example.techcentral;
 import com.example.techcentral.dao.OrderRepository;
 import com.example.techcentral.dao.ProductRepository;
 import com.example.techcentral.dao.UserRepository;
+import com.example.techcentral.enums.UserRole;
 import com.example.techcentral.models.Category;
 import com.example.techcentral.models.Order;
 import com.example.techcentral.models.Product;
 import com.example.techcentral.models.ProductDetail;
+import com.example.techcentral.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -67,9 +69,12 @@ class TechcentralApplicationTests {
 		Optional<Long> id = userRepository.findIdByEmail("lebaoduy@gmail.com");
 		System.out.println(id.get());
 	}
+	@Autowired
+	UserService userService;
+
 
 	@Test
 	void testStatuscode(){
-		System.out.println(HttpStatus.NOT_FOUND.value());
+		System.out.println(userService.getAllAdmin());
 	}
 }

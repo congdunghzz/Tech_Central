@@ -10,6 +10,6 @@ public class UnAuthorizedExceptionHandler {
     @ExceptionHandler(UnAuthorizedException.class)
     public ResponseEntity<ErrorResponse> handler(UnAuthorizedException e){
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), HttpStatus.UNAUTHORIZED.value());
-        return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 }

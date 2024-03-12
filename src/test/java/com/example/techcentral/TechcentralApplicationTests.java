@@ -1,6 +1,7 @@
 package com.example.techcentral;
 
 import com.example.techcentral.dao.OrderRepository;
+import com.example.techcentral.dao.ProductImageRepository;
 import com.example.techcentral.dao.ProductRepository;
 import com.example.techcentral.dao.UserRepository;
 import com.example.techcentral.enums.UserRole;
@@ -9,6 +10,8 @@ import com.example.techcentral.models.Order;
 import com.example.techcentral.models.Product;
 import com.example.techcentral.models.ProductDetail;
 import com.example.techcentral.service.UserService;
+import com.example.techcentral.service.imageService.ImageService;
+import com.example.techcentral.service.imageService.ImageServiceImp;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -72,9 +75,11 @@ class TechcentralApplicationTests {
 	@Autowired
 	UserService userService;
 
-
+	@Autowired
+	ProductImageRepository productImageRepository;
 	@Test
 	void testStatuscode(){
-		System.out.println(userService.getAllAdmin());
+
+		productImageRepository.deleteByUrl("https://storage.googleapis.com/techcenterimage.appspot.com/f8b5030c-edfa-4302-90e6-c9572af5a229318165413_5634151096697959_2737045889390659565_n.jpgjpg");
 	}
 }

@@ -1,11 +1,14 @@
 package com.example.techcentral.controller;
 
 import com.example.techcentral.dto.product.ProductDTO;
+import com.example.techcentral.dto.product.ProductRequest;
+import com.example.techcentral.models.ProductImage;
 import com.example.techcentral.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -31,9 +34,10 @@ public class ProductController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
-    @PostMapping
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
-        ProductDTO result = productService.addProduct(productDTO);
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<ProductDTO> addProduct(@ModelAttribute ProductRequest request) {
+        System.out.println(request.productDetail());
+        ProductDTO result = productService.addProduct(request);
         if (result != null) {
             return new ResponseEntity<>(result, HttpStatus.CREATED);
         }else return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -57,5 +61,19 @@ public class ProductController {
         if (result != null) {
             return new ResponseEntity<>(result, HttpStatus.OK);
         }else return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/{id}/image")
+    public ResponseEntity<ProductDTO> postProductImage(@PathVariable Long id,
+                                                       @RequestParam List<MultipartFile> files){
+        ProductDTO product = productService.addImages(id, files);
+        return new ResponseEntity<>(product, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<ProductDTO> deleteProductImage(@PathVariable Long id,
+                                                     @RequestBody List<ProductImage> images){
+        ProductDTO product = productService.deleteImages(id, images);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 }

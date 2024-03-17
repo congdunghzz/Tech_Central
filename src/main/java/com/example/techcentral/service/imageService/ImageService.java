@@ -17,7 +17,6 @@ public interface ImageService {
 
     String save(MultipartFile file) throws IOException;
 
-
     void delete(String imgUrl) throws IOException;
 
     default String getExtension(String originalFileName) {

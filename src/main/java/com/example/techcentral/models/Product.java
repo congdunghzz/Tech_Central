@@ -33,6 +33,10 @@ public class Product {
     @JoinColumn (name = "CATEGORY_ID")
     private Category category;
 
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn (name = "BRAND_ID")
+    private Brand brand;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "DETAIL_ID")
     private ProductDetail productDetail;

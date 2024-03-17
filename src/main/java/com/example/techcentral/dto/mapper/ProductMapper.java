@@ -15,7 +15,8 @@ public class ProductMapper {
                                 product.getPrice(),
                                 product.getProductImages(),
                                 product.getProductDetail(),
-                                product.getCategory().getId());
+                                product.getCategory().getName(),
+                                product.getBrand().getName());
     }
 
     public static List<ProductDTO> TransferToProductDTOs(List<Product> products){

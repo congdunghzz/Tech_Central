@@ -12,7 +12,8 @@ public record ProductDTO(
         double price,
         List<ProductImage> productImages,
         ProductDetail productDetail,
-        Long category_id
+        String category,
+        String brand
     ) {
 
 }

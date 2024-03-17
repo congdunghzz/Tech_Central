@@ -11,7 +11,8 @@ public record ProductRequest(
         double price,
         ProductDetail productDetail,
         List<MultipartFile> images,
-        Long category_id
+        String category,
+        String brand
 ) {
 
 }

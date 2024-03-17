@@ -1,11 +1,13 @@
 package com.example.techcentral.service;
 import com.example.techcentral.ExceptionHandler.NotFoundException;
+import com.example.techcentral.dao.BrandRepository;
 import com.example.techcentral.dao.CategoryRepository;
 import com.example.techcentral.dao.ProductImageRepository;
 import com.example.techcentral.dao.ProductRepository;
 import com.example.techcentral.dto.product.ProductDTO;
 import com.example.techcentral.dto.mapper.ProductMapper;
 import com.example.techcentral.dto.product.ProductRequest;
+import com.example.techcentral.models.Brand;
 import com.example.techcentral.models.Category;
 import com.example.techcentral.models.Product;
 import com.example.techcentral.models.ProductImage;
@@ -23,12 +25,14 @@ public class ProductService {
     private final ProductImageRepository productImageRepository;
     private final CategoryRepository categoryRepository;
     private final ProductImageService productImageService;
+    private final BrandRepository brandRepository;
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductImageRepository productImageRepository, CategoryRepository categoryRepository, ProductImageService productImageService) {
+    public ProductService(ProductRepository productRepository, ProductImageRepository productImageRepository, CategoryRepository categoryRepository, ProductImageService productImageService, BrandRepository brandRepository) {
         this.productRepository = productRepository;
         this.productImageRepository = productImageRepository;
         this.categoryRepository = categoryRepository;
         this.productImageService = productImageService;
+        this.brandRepository = brandRepository;
     }
 
     public List<ProductDTO> getAllProduct(){
@@ -49,14 +53,22 @@ public class ProductService {
                 .productDetail(request.productDetail())
                 .build();
 
-        Optional<Category> category = categoryRepository.findById(request.category_id());
-
+        Optional<Category> category = categoryRepository.findByName(request.category());
+        Optional<Brand> brand = brandRepository.findByName(request.brand());
         // if category is present, add product into it. if it is not, break the function
         if (category.isPresent()){
             product.setCategory(category.get());
         }else {
-            throw new NotFoundException("Category with id: " +request.category_id()+ " is not found");
+            throw new NotFoundException("Category with name: " +request.category()+ " is not found");
         }
+
+        // if brand is present, add product into it. if it is not, break the function
+        if (brand.isPresent()){
+            product.setBrand(brand.get());
+        }else {
+            throw new NotFoundException("Brand with name: " +request.brand()+ " is not found");
+        }
+
         // if images are present, add them
         if (!request.images().isEmpty()){
             try {
@@ -99,13 +111,13 @@ public class ProductService {
         updatedProduct.setName(productDTO.name());
         updatedProduct.setPrice(productDTO.price());
         // check category if it is present
-        Optional<Category> category = categoryRepository.findById(productDTO.category_id());
+        Optional<Category> category = categoryRepository.findByName(productDTO.category());
         // if category is present, set it for product. if it is not, break the function
         if (category.isPresent()){
             if (!category.get().getId().equals(updatedProduct.getCategory().getId()))
                 updatedProduct.setCategory(category.get());
         }else {
-            throw new NotFoundException("Category with id: " +productDTO.category_id()+ " is not found");
+            throw new NotFoundException("Category with name: " +productDTO.category()+ " is not found");
         }
 
         if (!updatedProduct.getProductDetail().equals(productDTO.productDetail())){
@@ -130,7 +142,7 @@ public class ProductService {
 
         try {
             List<ProductImage> productImages = productImageService.addImage(imgFiles);
-            productImages.stream().forEach(item -> item.setProduct(product.get()));
+            productImages.forEach(item -> item.setProduct(product.get()));
             product.get()
                     .getProductImages()
                     .addAll(productImages);

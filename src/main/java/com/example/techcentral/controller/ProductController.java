@@ -25,6 +25,23 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> getAllProduct(){
         return new ResponseEntity<>(productService.getAllProduct(), HttpStatus.OK);
     }
+
+    @GetMapping("/category/{name}")
+    public ResponseEntity<List<ProductDTO>> getAllProductByCategory(@PathVariable String name){
+        return new ResponseEntity<>(productService.getProductByCategory(name), HttpStatus.OK);
+    }
+
+    @GetMapping("/brand/{name}")
+    public ResponseEntity<List<ProductDTO>> getAllProductByBrand(@PathVariable String name){
+        return new ResponseEntity<>(productService.getProductByBrand(name), HttpStatus.OK);
+    }
+
+    @GetMapping("/category/{category}/brand/{brand}")
+    public ResponseEntity<List<ProductDTO>> getAllProductByCategory(@PathVariable String category,
+                                                                    @PathVariable String brand){
+        return new ResponseEntity<>(productService.getProductByCategoryAndBrand(category, brand), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> findOne(@PathVariable Long id) {
         ProductDTO result = productService.findOneById(id);

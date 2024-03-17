@@ -45,6 +45,41 @@ public class ProductService {
         }
     }
 
+    public List<ProductDTO> getProductByCategory(String name){
+        Optional<Category> category = categoryRepository.findByName(name);
+        if (category.isEmpty()) throw new NotFoundException("Category with name:"  +name+  "is not found");
+        List<Product> products = productRepository.findAllByCategory(category.get());
+        if (!products.isEmpty()) {
+            return ProductMapper.TransferToProductDTOs(products);
+        }else {
+            return null;
+        }
+    }
+    public List<ProductDTO> getProductByBrand(String name){
+        Optional<Brand> brand = brandRepository.findByName(name);
+        if (brand.isEmpty()) throw new NotFoundException("Brand with name:"  +name+  "is not found");
+        List<Product> products = productRepository.findAllByBrand(brand.get());
+        if (!products.isEmpty()) {
+            return ProductMapper.TransferToProductDTOs(products);
+        }else {
+            return null;
+        }
+    }
+    public List<ProductDTO> getProductByCategoryAndBrand(String category, String brand){
+        Optional<Category> dbCategory = categoryRepository.findByName(category);
+        if (category.isEmpty()) throw new NotFoundException("Category with name:"  +category+  "is not found");
+        Optional<Brand> dbBrand = brandRepository.findByName(brand);
+        if (brand.isEmpty()) throw new NotFoundException("Brand with name:"  +brand+  "is not found");
+
+        List<Product> products = productRepository.findAllByCategoryAndBrand(dbCategory.get(),dbBrand.get());
+        if (!products.isEmpty()) {
+            return ProductMapper.TransferToProductDTOs(products);
+        }else {
+            return null;
+        }
+    }
+
+
     public ProductDTO addProduct(ProductRequest request) {
 
         Product product = Product.builder()

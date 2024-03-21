@@ -29,7 +29,7 @@ public class OrderDetail {
     private double cost;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ORDER_ID")
     private Order order;
 }

@@ -31,6 +31,7 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrderForAdmin (){
         List<Order> result = orderService.findAll();
+        result.stream().forEach(item -> System.out.println(item.getOrderDetails()));
         return ResponseEntity.ok(result);
     }
     @GetMapping("/user/{id}")
@@ -49,7 +50,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Order> generateOrder(@RequestBody OrderRequest orderRequest,
                                                HttpServletRequest request){
-        System.out.println(orderRequest);
+
         Cookie[] cookies = request.getCookies();
         Order order;
         long userId = -1L;
@@ -92,7 +93,7 @@ public class OrderController {
             orderService.deleteOrderForAdmin(id);
             httpStatus = HttpStatus.OK;
         }
-        else {
+        else if((userService.getById(userId).role() == UserRole.USER)){
             orderService.deleteOrderForCustomer(id, userId);
             httpStatus = HttpStatus.OK;
         }

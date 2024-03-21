@@ -57,6 +57,8 @@ public class OrderService {
         if (user.isEmpty())
             throw new NotFoundException("User with id: " +userId+" was not found");
 
+        Order newOrder = new Order();
+        newOrder.setUser(user.get());
         List<OrderDetail> details = new ArrayList<>();
         double totalCost = 0;
 
@@ -68,26 +70,23 @@ public class OrderService {
             //check product if it is present
             if (product.isEmpty())
                 throw new NotFoundException("Product with id: " +item.productId()+ " is not found");
-
             totalCost += product.get().getPrice() * item.amount();
             details.add(OrderDetail
                     .builder()
                     .product(product.get())
                     .amount(item.amount())
+                    .order(newOrder)
                     .cost(product.get().getPrice() * item.amount())
                     .build());
         }
-        Order newOrder = Order
-                .builder()
-                .name(request.getName())
-                .address(request.getAddress())
-                .phone(request.getPhone())
-                .orderDate(new Date(System.currentTimeMillis()))
-                .totalCost(totalCost)
-                .orderStatus(OrderStatus.PROCESSING)
-                .orderDetails(details)
-                .user(user.get())
-                .build();
+        newOrder.setName(request.getName());
+        newOrder.setAddress(request.getAddress());
+        newOrder.setPhone(request.getPhone());
+        newOrder.setOrderDate(new Date(System.currentTimeMillis()));
+        newOrder.setTotalCost(totalCost);
+        newOrder.setOrderStatus(OrderStatus.PROCESSING);
+        newOrder.setOrderDetails(details);
+
         user.get().getOrders().add(newOrder);
         return orderRepository.save(newOrder);
     }
@@ -116,7 +115,7 @@ public class OrderService {
         if (order.isEmpty())
             throw new NotFoundException("Order with id: " +orderId+" was not found");
 
-        if (order.get().getOrderStatus() != OrderStatus.PROCESSING &&
+        if (order.get().getOrderStatus() != OrderStatus.PROCESSING ||
                 !Objects.equals(userId, order.get().getUser().getId())){
 
             throw new UnAuthorizedException("You are not permitted to delete order: " +orderId);

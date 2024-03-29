@@ -89,7 +89,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}/image")
     public ResponseEntity<ProductDTO> deleteProductImage(@PathVariable Long id,
-                                                     @RequestBody List<ProductImage> images){
+                                                        @RequestBody List<ProductImage> images){
         ProductDTO product = productService.deleteImages(id, images);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }

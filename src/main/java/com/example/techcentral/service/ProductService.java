@@ -103,20 +103,13 @@ public class ProductService {
         }else {
             throw new NotFoundException("Brand with name: " +request.brand()+ " is not found");
         }
+        Product createdProduct = productRepository.save(product);
 
         // if images are present, add them
         if (!request.images().isEmpty()){
-            try {
-                product.setProductImages(productImageService.addImage(request.images()));
-            } catch (IOException e) {
-                throw new NotFoundException("Image file was not saved, something went wrong !");
-            }
+            return addImages(createdProduct.getId(), request.images());
         }
-
-           Product result = productRepository.save(product);
-
-
-        return ProductMapper.TransferToProductDTO(result);
+        return ProductMapper.TransferToProductDTO(createdProduct);
     }
 
     public boolean deleteProduct (Long id){
@@ -149,7 +142,15 @@ public class ProductService {
         Optional<Category> category = categoryRepository.findByName(productDTO.category());
         // if category is present, set it for product. if it is not, break the function
         if (category.isPresent()){
-            if (!category.get().getId().equals(updatedProduct.getCategory().getId()))
+            if (!category.get().getName().equals(updatedProduct.getCategory().getName()))
+                updatedProduct.setCategory(category.get());
+        }else {
+            throw new NotFoundException("Category with name: " +productDTO.category()+ " is not found");
+        }
+        Optional<Brand> brand = brandRepository.findByName(productDTO.brand());
+        // if category is present, set it for product. if it is not, break the function
+        if (brand.isPresent()){
+            if (!brand.get().getName().equals(updatedProduct.getCategory().getName()))
                 updatedProduct.setCategory(category.get());
         }else {
             throw new NotFoundException("Category with name: " +productDTO.category()+ " is not found");

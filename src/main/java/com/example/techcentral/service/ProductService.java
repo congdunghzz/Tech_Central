@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -153,7 +154,7 @@ public class ProductService {
             if (!brand.get().getName().equals(updatedProduct.getCategory().getName()))
                 updatedProduct.setCategory(category.get());
         }else {
-            throw new NotFoundException("Category with name: " +productDTO.category()+ " is not found");
+            throw new NotFoundException("Brand with name: " +productDTO.brand()+ " is not found");
         }
 
         if (!updatedProduct.getProductDetail().equals(productDTO.productDetail())){
@@ -179,6 +180,9 @@ public class ProductService {
         try {
             List<ProductImage> productImages = productImageService.addImage(imgFiles);
             productImages.forEach(item -> item.setProduct(product.get()));
+            if (product.get().getProductImages() == null){
+                product.get().setProductImages(new ArrayList<>());
+            }
             product.get()
                     .getProductImages()
                     .addAll(productImages);

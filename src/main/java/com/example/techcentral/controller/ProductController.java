@@ -53,7 +53,8 @@ public class ProductController {
     }
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<ProductDTO> addProduct(@ModelAttribute ProductRequest request) {
-        System.out.println(request.productDetail());
+        System.out.println( "Controller Product detail: " + request.productDetail());
+        System.out.println( "Controller Product images: " + request.images());
         ProductDTO result = productService.addProduct(request);
         if (result != null) {
             return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -74,16 +75,18 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id,
                                                     @RequestBody ProductDTO productDTO){
+
         ProductDTO result = productService.editProduct(id,productDTO);
         if (result != null) {
             return new ResponseEntity<>(result, HttpStatus.OK);
         }else return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/{id}/image")
+    @PostMapping(value = "/{id}/image", consumes = {"multipart/form-data"})
     public ResponseEntity<ProductDTO> postProductImage(@PathVariable Long id,
-                                                       @RequestParam List<MultipartFile> files){
-        ProductDTO product = productService.addImages(id, files);
+                                                       @RequestParam(value = "images") List<MultipartFile> images){
+        System.out.println( "Controller Post Images: " + images);
+        ProductDTO product = productService.addImages(id, images);
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 

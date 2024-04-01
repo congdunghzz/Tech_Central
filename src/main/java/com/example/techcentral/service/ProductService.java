@@ -80,8 +80,9 @@ public class ProductService {
     }
     public List<ProductDTO> getProductByCategoryAndBrand(String category, String brand){
         List<Product> products;
-        boolean hasCategory = category.isBlank();
-        boolean hasBrand = brand.isBlank();
+        boolean hasCategory = !category.isBlank();
+        boolean hasBrand = !brand.isBlank();
+        System.out.println("Product Service: get product by cate and brand: " + hasCategory + " " + hasBrand);
 
         if(!hasCategory && !hasBrand){
             products = productRepository.findAll();

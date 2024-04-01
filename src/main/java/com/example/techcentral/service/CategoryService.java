@@ -50,7 +50,7 @@ public class CategoryService {
         return categoryRepository.save(dbCategory.get());
     }
 
-    public void deleteByName(Long id){
+    public void deleteById(Long id){
         Optional<Category> dbCategory = categoryRepository.findById(id);
         if (dbCategory.isEmpty())
             throw new NotFoundException("Category with name: "+id+" is not found");

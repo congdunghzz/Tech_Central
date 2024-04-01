@@ -46,7 +46,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public HttpStatus deleteCategory(@PathVariable Long id){
-        categoryService.deleteByName(id);
+        categoryService.deleteById(id);
         return HttpStatus.ACCEPTED;
     }
 }

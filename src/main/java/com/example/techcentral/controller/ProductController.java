@@ -26,19 +26,19 @@ public class ProductController {
         return new ResponseEntity<>(productService.getAllProduct(), HttpStatus.OK);
     }
 
-    @GetMapping("/category/{name}")
-    public ResponseEntity<List<ProductDTO>> getAllProductByCategory(@PathVariable String name){
+    @GetMapping("/category")
+    public ResponseEntity<List<ProductDTO>> getAllProductByCategory(@RequestParam(value ="name", required = false) String name){
         return new ResponseEntity<>(productService.getProductByCategory(name), HttpStatus.OK);
     }
 
-    @GetMapping("/brand/{name}")
-    public ResponseEntity<List<ProductDTO>> getAllProductByBrand(@PathVariable String name){
+    @GetMapping("/brand")
+    public ResponseEntity<List<ProductDTO>> getAllProductByBrand(@RequestParam(value = "name", required = false) String name){
         return new ResponseEntity<>(productService.getProductByBrand(name), HttpStatus.OK);
     }
 
-    @GetMapping("/category/{category}/brand/{brand}")
-    public ResponseEntity<List<ProductDTO>> getAllProductByCategory(@PathVariable String category,
-                                                                    @PathVariable String brand){
+    @GetMapping("/category/brand")
+    public ResponseEntity<List<ProductDTO>> getAllProductByCategory(@RequestParam(value ="category", required = false) String category,
+                                                                    @RequestParam(value ="brand", required = false) String brand){
         return new ResponseEntity<>(productService.getProductByCategoryAndBrand(category, brand), HttpStatus.OK);
     }
 
@@ -85,7 +85,7 @@ public class ProductController {
     @PostMapping(value = "/{id}/image", consumes = {"multipart/form-data"})
     public ResponseEntity<ProductDTO> postProductImage(@PathVariable Long id,
                                                        @RequestParam(value = "images") List<MultipartFile> images){
-        System.out.println( "Controller Post Images: " + images);
+
         ProductDTO product = productService.addImages(id, images);
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }

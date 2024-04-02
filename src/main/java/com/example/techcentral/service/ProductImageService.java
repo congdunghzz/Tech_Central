@@ -1,6 +1,8 @@
 package com.example.techcentral.service;
 
+import com.example.techcentral.ExceptionHandler.NotFoundException;
 import com.example.techcentral.ExceptionHandler.UnAuthorizedException;
+import com.example.techcentral.dao.ProductImageRepository;
 import com.example.techcentral.dao.ProductRepository;
 import com.example.techcentral.models.ProductImage;
 import com.example.techcentral.service.imageService.ImageService;
@@ -15,6 +17,8 @@ import java.util.List;
 public class ProductImageService {
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private ProductImageRepository productImageRepository;
     @Autowired
     private ImageService imageService;
     public ProductImage addImage(MultipartFile imgFile) throws IOException {
@@ -36,6 +40,16 @@ public class ProductImageService {
     }
 
     public void deleteImg(String imgUrl) throws IOException {
-        imageService.delete(imgUrl);
+        try{
+            System.out.println("Image service: deleting image");
+            imageService.delete(imgUrl);
+            System.out.println("Image service: deleted image");
+            productImageRepository.deleteByUrl(imgUrl);
+            System.out.println("Image service: deleted image in database");
+
+
+        }catch (Exception e){
+            throw new NotFoundException("the file is not be found");
+        }
     }
 }

@@ -12,6 +12,7 @@ import com.example.techcentral.models.Category;
 import com.example.techcentral.models.Product;
 import com.example.techcentral.models.ProductImage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -153,12 +154,26 @@ public class ProductService {
     }
 
     public boolean deleteProduct (Long id){
-        try {
+        Optional<Product> product =productRepository.findById(id);
+        if (product.isEmpty())
+            throw new NotFoundException("Product with id: " +id+ " is not found");
+
+        if(product.get().getProductImages() != null) {
+            product.get().getProductImages().forEach(productImage -> {
+                try {
+                    productImageService.deleteImg(productImage.getUrl());
+                } catch (IOException e) {
+                    throw new NotFoundException("Image cant not be removed");
+                }
+            });
+        }
+        try{
             productRepository.deleteById(id);
             return true;
-        }catch (Exception e){
-            throw new NotFoundException("Product with id: " +id+ " is not found");
+        }catch (Exception e ){
+            throw new DataIntegrityViolationException("This data have some relation with other object");
         }
+
     }
 
     public ProductDTO findOneById(Long id){
@@ -230,19 +245,25 @@ public class ProductService {
             throw new NotFoundException("Image file was not saved, something went wrong !");
         }
     }
+
+
+    ///         NOT WORK
+
     public ProductDTO deleteImages (Long productId, List<ProductImage> imageList){
         Optional<Product> product = productRepository.findById(productId);
         if (product.isEmpty()){
             throw new NotFoundException("Product with id: " +productId+ " is not found");
         }
+        if (imageList != null) {
+            for (ProductImage img : imageList) {
 
-        for (ProductImage img : imageList){
-            try {
-                productImageService.deleteImg(img.getUrl());
-                productImageRepository.deleteByUrl(img.getUrl());
-                product.get().getProductImages().remove(img);
-            } catch (IOException e) {
-                throw new NotFoundException("Image file was not saved, something went wrong !");
+                try {
+                    productImageService.deleteImg(img.getUrl());
+                    productImageRepository.deleteByUrl(img.getUrl());
+                    product.get().getProductImages().remove(img);
+                } catch (IOException e) {
+                    throw new NotFoundException("Image file was not removed, something went wrong !");
+                }
             }
         }
         return ProductMapper.TransferToProductDTO(productRepository.save(product.get()));

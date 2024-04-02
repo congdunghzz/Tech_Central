@@ -70,7 +70,7 @@ public class ImageServiceImp implements ImageService {
 
 
         if (StringUtils.isEmpty(name)) {
-            throw new IOException("invalid file name");
+            throw new NotFoundException("invalid file name");
         }
 
         Blob blob = bucket.get(name);
@@ -78,7 +78,7 @@ public class ImageServiceImp implements ImageService {
         if (blob == null) {
             throw new NotFoundException("file not found");
         }
-
+        System.out.println("Deleted");
         blob.delete();
 
     }

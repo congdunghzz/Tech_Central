@@ -9,6 +9,7 @@ import com.example.techcentral.models.Category;
 import com.example.techcentral.models.Order;
 import com.example.techcentral.models.Product;
 import com.example.techcentral.models.ProductDetail;
+import com.example.techcentral.service.ProductService;
 import com.example.techcentral.service.UserService;
 import com.example.techcentral.service.imageService.ImageService;
 import com.example.techcentral.service.imageService.ImageServiceImp;
@@ -77,9 +78,10 @@ class TechcentralApplicationTests {
 
 	@Autowired
 	ProductImageRepository productImageRepository;
+	@Autowired
+	private ProductService productService;
 	@Test
 	void testStatuscode(){
-
-		productImageRepository.deleteByUrl("https://storage.googleapis.com/techcenterimage.appspot.com/f8b5030c-edfa-4302-90e6-c9572af5a229318165413_5634151096697959_2737045889390659565_n.jpgjpg");
+		productRepository.deleteById(31L);
 	}
 }

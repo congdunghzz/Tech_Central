@@ -18,9 +18,15 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID", nullable = false)
-    private Product product;
+
+    @Column(name="PRODUCT_ID")
+    private Long productId;
+
+    @Column(name="PRODUCT_NAME")
+    private String productName;
+
+    @Column(name="PRODUCT_PRICE")
+    private double productPrice;
 
     @Column(name = "AMOUNT", nullable = false)
     private int amount;

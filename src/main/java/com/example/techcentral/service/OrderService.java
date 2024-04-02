@@ -73,7 +73,9 @@ public class OrderService {
             totalCost += product.get().getPrice() * item.amount();
             details.add(OrderDetail
                     .builder()
-                    .product(product.get())
+                    .productId(product.get().getId())
+                    .productName(product.get().getName())
+                    .productPrice(product.get().getPrice())
                     .amount(item.amount())
                     .order(newOrder)
                     .cost(product.get().getPrice() * item.amount())

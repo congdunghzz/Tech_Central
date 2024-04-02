@@ -27,13 +27,15 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductImageService productImageService;
     private final BrandRepository brandRepository;
+    private final BrandService brandService;
     @Autowired
-    public ProductService(ProductRepository productRepository, ProductImageRepository productImageRepository, CategoryRepository categoryRepository, ProductImageService productImageService, BrandRepository brandRepository) {
+    public ProductService(ProductRepository productRepository, ProductImageRepository productImageRepository, CategoryRepository categoryRepository, ProductImageService productImageService, BrandRepository brandRepository, BrandService brandService) {
         this.productRepository = productRepository;
         this.productImageRepository = productImageRepository;
         this.categoryRepository = categoryRepository;
         this.productImageService = productImageService;
         this.brandRepository = brandRepository;
+        this.brandService = brandService;
     }
 
     public List<ProductDTO> getAllProduct(){
@@ -138,7 +140,8 @@ public class ProductService {
         if (brand.isPresent()){
             product.setBrand(brand.get());
         }else {
-            throw new NotFoundException("Brand with name: " +request.brand()+ " is not found");
+            Brand newBrand = Brand.builder().name(request.brand()).build();
+            product.setBrand(newBrand);
         }
         Product createdProduct = productRepository.save(product);
 

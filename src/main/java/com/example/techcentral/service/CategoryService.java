@@ -5,6 +5,7 @@ import com.example.techcentral.ExceptionHandler.NotFoundException;
 import com.example.techcentral.dao.CategoryRepository;
 import com.example.techcentral.models.Category;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,7 +55,11 @@ public class CategoryService {
         Optional<Category> dbCategory = categoryRepository.findById(id);
         if (dbCategory.isEmpty())
             throw new NotFoundException("Category with name: "+id+" is not found");
-        categoryRepository.deleteById(id);
+        try{
+            categoryRepository.deleteById(id);
+        }catch (Exception e){
+            throw new DataIntegrityViolationException("Cant not delete this object, because it has some relations");
+        }
     }
 
 }

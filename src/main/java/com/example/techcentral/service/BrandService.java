@@ -6,6 +6,7 @@ import com.example.techcentral.dao.BrandRepository;
 import com.example.techcentral.models.Brand;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,7 +56,11 @@ public class BrandService {
         Optional<Brand> dbBrand = brandRepository.findById(id);
         if (dbBrand.isEmpty())
             throw new NotFoundException("Brand with id: "+id+" is not found");
-        brandRepository.deleteById(id);
+        try{
+            brandRepository.deleteById(id);
+        }catch (Exception e){
+            throw new DataIntegrityViolationException("Cant not delete this object, because it has some relations");
+        }
     }
 
 

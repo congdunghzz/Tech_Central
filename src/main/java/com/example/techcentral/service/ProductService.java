@@ -247,7 +247,7 @@ public class ProductService {
     }
 
 
-    ///         NOT WORK
+    ///         NOT WORKING
 
     public ProductDTO deleteImages (Long productId, List<ProductImage> imageList){
         Optional<Product> product = productRepository.findById(productId);
@@ -259,7 +259,7 @@ public class ProductService {
 
                 try {
                     productImageService.deleteImg(img.getUrl());
-                    productImageRepository.deleteByUrl(img.getUrl());
+
                     product.get().getProductImages().remove(img);
                 } catch (IOException e) {
                     throw new NotFoundException("Image file was not removed, something went wrong !");
@@ -268,4 +268,7 @@ public class ProductService {
         }
         return ProductMapper.TransferToProductDTO(productRepository.save(product.get()));
     }
+
+    ///         NOT WORKING
+
 }

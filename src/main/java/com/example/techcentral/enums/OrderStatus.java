@@ -5,5 +5,5 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 
 public enum OrderStatus {
-    PROCESSING, SHIPPING ,FINISHED;
+    PROCESSING, SHIPPING ,FINISHED, CANCELED;
 }

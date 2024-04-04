@@ -33,16 +33,7 @@ public class UserController {
         }else return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping()
-    public ResponseEntity<UserDTO> registerNewUser (@RequestBody UserRegisterRequest request){
 
-        UserDTO createdUser = userService.createUser(request);
-        if (createdUser != null) {
-            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-        }else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> editInfo(@PathVariable Long id,

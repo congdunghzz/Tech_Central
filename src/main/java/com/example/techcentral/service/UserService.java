@@ -59,26 +59,7 @@ public class UserService implements UserDetailsService{
         return UserMapper.TransferToUserDTOs(userRepository.findAll());
     }
 
-    public UserDTO createUser(UserRegisterRequest request){
-        if (userRepository.existsByEmail(request.getEmail())){
-            throw new ExistException("user with email: " + request.getEmail()+" have existed");
-        }
-        User createdUser;
-        User user = User
-                .builder()
-                .name(request.getName())
-                .dob(request.getDob())
-                .gender(request.getGender())
-                .phone(request.getPhone())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(UserRole.USER)
-                .build();
 
-        createdUser = userRepository.save(user);
-
-        return UserMapper.TransferToUserDTO(createdUser);
-    }
 
     public Long getIdByEmail(String email){
             Optional<Long> userId = userRepository.findIdByEmail(email);

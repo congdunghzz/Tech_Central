@@ -45,9 +45,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
         Long userId = jwtTokenProvider.extractUserId(jwtToken);
 
-        if(userId != null
-                && SecurityContextHolder.getContext().getAuthentication() == null
-                && jwtTokenProvider.validateToken(jwtToken)){
+        if(userId != null && jwtTokenProvider.validateToken(jwtToken)){
 
             UserDetails userDetail = userService.loadUserById(userId);
 

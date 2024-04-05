@@ -2,6 +2,7 @@ package com.example.techcentral.controller;
 
 import com.example.techcentral.ExceptionHandler.UnAuthorizedException;
 import com.example.techcentral.dto.order.request.OrderRequest;
+import com.example.techcentral.dto.user.CustomUserDetail;
 import com.example.techcentral.enums.OrderStatus;
 import com.example.techcentral.enums.UserRole;
 import com.example.techcentral.models.Order;
@@ -12,6 +13,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +34,8 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrderForAdmin (){
+
         List<Order> result = orderService.findAll();
-        result.stream().forEach(item -> System.out.println(item.getOrderDetails()));
         return ResponseEntity.ok(result);
     }
     @GetMapping("/user/{id}")
@@ -49,18 +53,17 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Order> generateOrder(@RequestBody OrderRequest orderRequest,
-                                               HttpServletRequest request){
+                                               @CurrentSecurityContext(expression="authentication") Authentication authentication){
+        Long userId = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
+            userId = user.getUser().getId();
 
-        Cookie[] cookies = request.getCookies();
-        Order order;
-        long userId = -1L;
-        for (Cookie cookieItem: cookies) {
-            if (cookieItem.getName().equals("userId")){
-                userId = Long.parseLong(cookieItem.getValue());
-            }
         }
 
-        if (userId != 1){
+        Order order;
+
+        if (userId != null){
             order = orderService.createOrder(orderRequest, userId);
         }else {
             throw new UnAuthorizedException("You is not permitted to do this action");
@@ -71,19 +74,22 @@ public class OrderController {
     @PutMapping("/{id}/status")
     public ResponseEntity<Order> updateStatusByAdmin(@PathVariable Long id,
                                                      @RequestBody OrderStatus status){
+
         Order order = orderService.updateStatus(id, status);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public HttpStatus delete(@PathVariable Long id, HttpServletRequest request){
+    public HttpStatus delete(
+            @PathVariable Long id,
+            @CurrentSecurityContext(expression="authentication") Authentication authentication
+    ){
         HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
-        Cookie[] cookies = request.getCookies();
+
         long userId = -1L;
-        for (Cookie cookie : cookies){
-            if (cookie.getName().equals("userId")){
-                userId = Long.parseLong(cookie.getValue());
-            }
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
+            userId = user.getUser().getId();
         }
 
         if (userId == -1L)

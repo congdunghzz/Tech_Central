@@ -56,20 +56,13 @@ public class JwtTokenProvider {
         return Long.parseLong(userId);
     }
 
-    public boolean validateToken(String authToken) {
-        try {
-            Jwts.parser().setSigningKey(KEY).parseClaimsJws(authToken);
-            return true;
-        } catch (MalformedJwtException ex) {
-            throw new JwtException("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            throw new JwtException("Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            throw new JwtException("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            throw new JwtException("JWT claims string is empty.");
-        }
+    public boolean validateToken(String token) {
+        String userId = extractClaim(token, Claims::getSubject);
+        return (userId != null && !IsTokenExpired(token));
+    }
 
+    public boolean IsTokenExpired (String token){
+        return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
     private Key getSignInKey(){

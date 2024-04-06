@@ -33,9 +33,10 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrderForAdmin (){
+    public ResponseEntity<List<Order>> getAllOrderForAdmin (
+            @RequestParam(value = "status", required = false) String status){
 
-        List<Order> result = orderService.findAll();
+        List<Order> result = orderService.findAllByStatus(status);
         return ResponseEntity.ok(result);
     }
     @GetMapping("/user/{id}")

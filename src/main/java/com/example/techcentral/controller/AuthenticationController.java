@@ -31,22 +31,16 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> registerNewUser (@RequestBody UserRegisterRequest request){
+    public ResponseEntity<AuthenticationResponse> registerNewUser (@RequestBody UserRegisterRequest request){
 
-        boolean response = authenticationService.createUser(request);
-        Map<String, String> result = new HashMap<>();
-        if (response) {
-            result.put("message", "ok");
-            return new ResponseEntity<>(result, HttpStatus.CREATED);
-        }else {
-            result.put("message", "error");
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
-        }
+        AuthenticationResponse response = authenticationService.createUser(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate (@RequestBody LoginRequest request){
-
+        System.out.println("Auth Controller register request : "+request);
         AuthenticationResponse response = authenticationService.login(request);
         return ResponseEntity.ok(response);
     }

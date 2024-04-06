@@ -1,6 +1,7 @@
 package com.example.techcentral.service;
 
 import com.example.techcentral.ExceptionHandler.ExistException;
+import com.example.techcentral.ExceptionHandler.NotFoundException;
 import com.example.techcentral.config.jwtConfig.JwtTokenProvider;
 import com.example.techcentral.dao.UserRepository;
 import com.example.techcentral.dto.user.CustomUserDetail;
@@ -32,7 +33,7 @@ public class AuthenticationService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public boolean createUser(UserRegisterRequest request){
+    public AuthenticationResponse createUser(UserRegisterRequest request){
         if (userRepository.existsByEmail(request.getEmail())){
             throw new ExistException("user with email: " + request.getEmail()+" have existed");
         }
@@ -48,13 +49,16 @@ public class AuthenticationService {
                 .role(UserRole.USER)
                 .build();
 
-        try{
-            createdUser = userRepository.save(user);
-            return true;
 
-        }catch (Exception e){
-            return false;
-        }
+            createdUser = userRepository.save(user);
+
+            if (createdUser != null){
+
+                String token = jwtTokenProvider.generateToken(new CustomUserDetail(createdUser));
+                return new AuthenticationResponse(token);
+            }else {
+                throw new NotFoundException("Sign up falsely");
+            }
 
     }
 

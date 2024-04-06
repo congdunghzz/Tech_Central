@@ -1,5 +1,6 @@
 package com.example.techcentral.dao;
 
+import com.example.techcentral.enums.OrderStatus;
 import com.example.techcentral.models.Order;
 import com.example.techcentral.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findAllByOrderByOrderDateDesc();
     List<Order> findByUserIdOrderByOrderDateDesc(Long userId);
-
+    List<Order> findByOrderStatusOrderByOrderDateDesc(OrderStatus status);
 }

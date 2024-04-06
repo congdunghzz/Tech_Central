@@ -6,8 +6,7 @@ import lombok.Getter;
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum Gender {
-    MALE ,
-    FEMALE ,
+    MALE,
+    FEMALE,
     OTHERS;
-
 }

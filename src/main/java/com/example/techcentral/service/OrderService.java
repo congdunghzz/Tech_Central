@@ -50,6 +50,38 @@ public class OrderService {
         return orderRepository.findByUserIdOrderByOrderDateDesc(userId);
     }
 
+    //PROCESSING, SHIPPING ,FINISHED, CANCELED
+    public List<Order> findAllByStatus(String status){
+        OrderStatus st;
+        switch (status.toUpperCase()){
+            case "PROCESSING": {
+                st = OrderStatus.PROCESSING;
+                break;
+            }
+            case "SHIPPING": {
+                st = OrderStatus.SHIPPING;
+                break;
+            }
+            case "FINISHED": {
+                st = OrderStatus.FINISHED;
+                break;
+            }
+            case "CANCELED": {
+                st = OrderStatus.CANCELED;
+                break;
+            }
+            default: {
+                st = null;
+                break;
+            }
+        }
+        if (st == null){
+            return orderRepository.findAllByOrderByOrderDateDesc();
+        }
+        return orderRepository.findByOrderStatusOrderByOrderDateDesc(st);
+    }
+
+
     public Order createOrder(OrderRequest request, Long userId){
 
         // check user if it is present

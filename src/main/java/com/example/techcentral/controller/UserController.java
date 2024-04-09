@@ -1,11 +1,17 @@
 package com.example.techcentral.controller;
 
+import com.example.techcentral.ExceptionHandler.NotFoundException;
+import com.example.techcentral.ExceptionHandler.UnAuthorizedException;
+import com.example.techcentral.dto.user.CustomUserDetail;
 import com.example.techcentral.dto.user.UserDTO;
 import com.example.techcentral.dto.user.UserRegisterRequest;
 import com.example.techcentral.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -33,12 +39,48 @@ public class UserController {
         }else return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/myProfile")
+    public ResponseEntity<UserDTO> getMyProfile (
+            @CurrentSecurityContext(expression="authentication") Authentication authentication){
+
+        Long userId = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
+            userId = user.getUser().getId();
+
+        }
+
+        UserDTO userDTO;
+        if (userId != null){
+            userDTO = userService.getById(userId);
+        }else {
+            throw new NotFoundException("Not login");
+        }
+
+        if (userDTO != null){
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        }else return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> editInfo(@PathVariable Long id,
-                                            @RequestBody UserRegisterRequest request){
-        UserDTO updatedUser = userService.editInfo(id, request);
+
+    @PutMapping("/myProfile")
+    public ResponseEntity<UserDTO> editInfo(
+            @CurrentSecurityContext(expression="authentication") Authentication authentication,
+            @RequestBody UserRegisterRequest request){
+        Long userId = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();
+            userId = user.getUser().getId();
+
+        }
+        UserDTO updatedUser;
+        if (userId != null){
+            updatedUser = userService.editInfo(userId, request);
+        }else {
+            throw new NotFoundException("Not login");
+        }
+
         if (updatedUser != null) {
             return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
         }else {

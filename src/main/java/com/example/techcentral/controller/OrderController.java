@@ -1,5 +1,6 @@
 package com.example.techcentral.controller;
 
+import com.example.techcentral.ExceptionHandler.NotFoundException;
 import com.example.techcentral.ExceptionHandler.UnAuthorizedException;
 import com.example.techcentral.dto.order.request.OrderRequest;
 import com.example.techcentral.dto.user.CustomUserDetail;
@@ -42,6 +43,27 @@ public class OrderController {
     @GetMapping("/user/{id}")
     public ResponseEntity<List<Order>> findByUser (@PathVariable Long id){
         List<Order> result = orderService.findAllByUser(id);
+
+        return ResponseEntity.ok(result);
+    }
+    @GetMapping("/myOrders")
+    public ResponseEntity<List<Order>> getMyOrders (
+            @CurrentSecurityContext(expression="authentication") Authentication authentication
+    ){
+        Long userId = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails){
+            CustomUserDetail userDetail = (CustomUserDetail) authentication.getPrincipal();
+            userId = userDetail.getUser().getId();
+        }
+        List<Order> result;
+        if (userId != null){
+
+            result = orderService.findAllByUser(userId);
+
+
+        }else {
+            throw new UnAuthorizedException("Not login");
+        }
 
         return ResponseEntity.ok(result);
     }

@@ -86,6 +86,20 @@ public class ProductService {
             return null;
         }
     }
+
+
+    public Page<ProductDTO> searchForName (String name, int page, int size){
+
+        Page<Product> products;
+        Pageable pageable = PageRequest.of(page-1,size);
+        if (name.isBlank()){
+            products = productRepository.findAll(pageable);
+        }else {
+            products = productRepository.findAllByNameContainingIgnoreCase(name, pageable);
+        }
+        return ProductMapper.TransferToProductDTOPage(products);
+    }
+
     public Page<ProductDTO> getProductByCategoryAndBrand(String category, String brand, int page, int size){
         Page<Product> products;
         Pageable pageable = PageRequest.of(page-1, size);

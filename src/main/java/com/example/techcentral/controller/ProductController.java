@@ -43,6 +43,11 @@ public class ProductController {
                 HttpStatus.OK);
     }
 
+    @GetMapping("newProduct")
+    public ResponseEntity<List<ProductDTO>> getNewProduct (@RequestParam(value = "size") Optional<Integer> size){
+        return ResponseEntity.ok(productService.getLatestProducts(size.orElse(8)));
+    }
+
     @GetMapping("/category")
     public ResponseEntity<Page<ProductDTO>> getAllProductByCategory(@RequestParam(value ="name", required = false) String name,
                                                                     @RequestParam(value = "page", required = false) Optional<Integer> page,

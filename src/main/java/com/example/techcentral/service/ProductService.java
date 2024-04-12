@@ -100,6 +100,14 @@ public class ProductService {
         return ProductMapper.TransferToProductDTOPage(products);
     }
 
+    public List<ProductDTO> getLatestProducts (int size){
+
+        Page<Product> products;
+        Pageable pageable = PageRequest.of(0,size);
+        products = productRepository.findAllByOrderByIdDesc(pageable);
+        return ProductMapper.TransferToProductDTOs(products.getContent());
+    }
+
     public Page<ProductDTO> getProductByCategoryAndBrand(String category, String brand, int page, int size){
         Page<Product> products;
         Pageable pageable = PageRequest.of(page-1, size);

@@ -16,6 +16,9 @@ import com.example.techcentral.service.imageService.ImageServiceImp;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Limit;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -82,6 +85,6 @@ class TechcentralApplicationTests {
 	private ProductService productService;
 	@Test
 	void testStatuscode(){
-		productRepository.deleteById(31L);
+
 	}
 }

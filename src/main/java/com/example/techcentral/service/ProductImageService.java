@@ -41,11 +41,10 @@ public class ProductImageService {
 
     public void deleteImg(String imgUrl) throws IOException {
         try{
-            System.out.println("Image service: deleting image");
+
             imageService.delete(imgUrl);
-            System.out.println("Image service: deleted image");
             productImageRepository.deleteByUrl(imgUrl);
-            System.out.println("Image service: deleted image in database");
+
 
 
         }catch (Exception e){

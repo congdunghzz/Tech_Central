@@ -5,12 +5,14 @@ import com.example.techcentral.dto.product.ProductRequest;
 import com.example.techcentral.models.ProductImage;
 import com.example.techcentral.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/product")
@@ -22,24 +24,44 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAllProduct(){
-        return new ResponseEntity<>(productService.getAllProduct(), HttpStatus.OK);
+    public ResponseEntity<Page<ProductDTO>> getAllProduct(
+            @RequestParam(value = "page", required = false) Optional<Integer> page,
+            @RequestParam(value = "size", required = false) Optional<Integer> size
+    ){
+        return new ResponseEntity<>(
+                productService.getAllProduct(page.orElse(1), size.orElse(1000)),
+                HttpStatus.OK);
     }
 
     @GetMapping("/category")
-    public ResponseEntity<List<ProductDTO>> getAllProductByCategory(@RequestParam(value ="name", required = false) String name){
-        return new ResponseEntity<>(productService.getProductByCategory(name), HttpStatus.OK);
+    public ResponseEntity<Page<ProductDTO>> getAllProductByCategory(@RequestParam(value ="name", required = false) String name,
+                                                                    @RequestParam(value = "page", required = false) Optional<Integer> page,
+                                                                    @RequestParam(value = "size", required = false) Optional<Integer> size
+    ){
+        return new ResponseEntity<>(
+                productService.getProductByCategory(name,  page.orElse(1), size.orElse(1000)),
+                        HttpStatus.OK);
     }
 
     @GetMapping("/brand")
-    public ResponseEntity<List<ProductDTO>> getAllProductByBrand(@RequestParam(value = "name", required = false) String name){
-        return new ResponseEntity<>(productService.getProductByBrand(name), HttpStatus.OK);
+    public ResponseEntity<Page<ProductDTO>> getAllProductByBrand(@RequestParam(value = "name", required = false) String name,
+                                                                 @RequestParam(value = "page", required = false) Optional<Integer> page,
+                                                                 @RequestParam(value = "size", required = false) Optional<Integer> size
+    ){
+        return new ResponseEntity<>(
+                productService.getProductByBrand(name, page.orElse(1), size.orElse(1000)),
+                HttpStatus.OK);
     }
 
     @GetMapping("/category/brand")
-    public ResponseEntity<List<ProductDTO>> getAllProductByCategory(@RequestParam(value ="category", required = false) String category,
-                                                                    @RequestParam(value ="brand", required = false) String brand){
-        return new ResponseEntity<>(productService.getProductByCategoryAndBrand(category, brand), HttpStatus.OK);
+    public ResponseEntity<Page<ProductDTO>> getAllProductByCategoryAndBrand(@RequestParam(value ="category", required = false) String category,
+                                                                    @RequestParam(value ="brand", required = false) String brand,
+                                                                    @RequestParam(value = "page", required = false) Optional<Integer> page,
+                                                                    @RequestParam(value = "size", required = false) Optional<Integer> size
+    ){
+        return new ResponseEntity<>(productService.getProductByCategoryAndBrand(category, brand,
+                                                page.orElse(1), size.orElse(1000)),
+                                    HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -53,8 +75,7 @@ public class ProductController {
     }
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<ProductDTO> addProduct(@ModelAttribute ProductRequest request) {
-        System.out.println( "Controller Product detail: " + request.productDetail());
-        System.out.println( "Controller Product images: " + request.images());
+
         ProductDTO result = productService.addProduct(request);
         if (result != null) {
             return new ResponseEntity<>(result, HttpStatus.CREATED);

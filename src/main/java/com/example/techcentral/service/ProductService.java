@@ -13,6 +13,9 @@ import com.example.techcentral.models.Product;
 import com.example.techcentral.models.ProductImage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,56 +42,59 @@ public class ProductService {
         this.brandService = brandService;
     }
 
-    public List<ProductDTO> getAllProduct(){
+    public Page<ProductDTO> getAllProduct(int page, int size){
 
-        List<Product> products = productRepository.findAll();
+        Page<Product> products = productRepository.findAll(PageRequest.of(page-1, size));
         if (!products.isEmpty()) {
-            return ProductMapper.TransferToProductDTOs(products);
+            return ProductMapper.TransferToProductDTOPage(products);
         }else {
             return null;
         }
     }
 
-    public List<ProductDTO> getProductByCategory(String name){
-        List<Product> products;
+    public Page<ProductDTO> getProductByCategory(String name, int page, int size){
+        Page<Product> products;
+        Pageable pageable = PageRequest.of(page-1, size);
         if (name.isBlank()) {
-            products = productRepository.findAll();
+            products = productRepository.findAll(pageable);
         } else{
             Optional<Category> category = categoryRepository.findByName(name);
             if (category.isEmpty()) throw new NotFoundException("Category with name:"  +name+  "is not found");
 
-            products = productRepository.findAllByCategory(category.get());
+            products = productRepository.findAllByCategory(category.get(), pageable);
         }
         if (!products.isEmpty()) {
-            return ProductMapper.TransferToProductDTOs(products);
+            return ProductMapper.TransferToProductDTOPage(products);
         }else {
             return null;
         }
     }
-    public List<ProductDTO> getProductByBrand(String name){
-        List<Product> products;
+    public Page<ProductDTO> getProductByBrand(String name, int page, int size){
+        Page<Product> products;
+        Pageable pageable = PageRequest.of(page-1, size);
         if (name.isBlank()) {
-            products = productRepository.findAll();
+            products = productRepository.findAll(pageable);
         } else{
             Optional<Brand> brand = brandRepository.findByName(name);
             if (brand.isEmpty()) throw new NotFoundException("Brand with name:"  +name+  "is not found");
-            products = productRepository.findAllByBrand(brand.get());
+            products = productRepository.findAllByBrand(brand.get(), pageable);
         }
 
         if (!products.isEmpty()) {
-            return ProductMapper.TransferToProductDTOs(products);
+            return ProductMapper.TransferToProductDTOPage(products);
         }else {
             return null;
         }
     }
-    public List<ProductDTO> getProductByCategoryAndBrand(String category, String brand){
-        List<Product> products;
+    public Page<ProductDTO> getProductByCategoryAndBrand(String category, String brand, int page, int size){
+        Page<Product> products;
+        Pageable pageable = PageRequest.of(page-1, size);
         boolean hasCategory = !category.isBlank();
         boolean hasBrand = !brand.isBlank();
         System.out.println("Product Service: get product by cate and brand: " + hasCategory + " " + hasBrand);
 
         if(!hasCategory && !hasBrand){
-            products = productRepository.findAll();
+            products = productRepository.findAll(pageable);
         }else{
             // has category
             if(hasCategory){
@@ -96,24 +102,24 @@ public class ProductService {
                 if (category.isEmpty()) throw new NotFoundException("Category with name:"  +category+  "is not found");
                 // brand is not present
                 if(!hasBrand) {
-                    products = productRepository.findAllByCategory(dbCategory.get());
+                    products = productRepository.findAllByCategory(dbCategory.get(),pageable);
                 }
                 //has brand as well
                 else{
                     Optional<Brand> dbBrand = brandRepository.findByName(brand);
                     if (brand.isEmpty()) throw new NotFoundException("Brand with name:"  +brand+  "is not found");
-                    products = productRepository.findAllByCategoryAndBrand(dbCategory.get(), dbBrand.get());
+                    products = productRepository.findAllByCategoryAndBrand(dbCategory.get(), dbBrand.get(),pageable);
                 }
             }
             // has brand
             else{
                 Optional<Brand> dbBrand = brandRepository.findByName(brand);
                 if (brand.isEmpty()) throw new NotFoundException("Brand with name:"  +brand+  "is not found");
-                products = productRepository.findAllByBrand(dbBrand.get());
+                products = productRepository.findAllByBrand(dbBrand.get(), pageable);
             }
         }
         if (!products.isEmpty()) {
-            return ProductMapper.TransferToProductDTOs(products);
+            return ProductMapper.TransferToProductDTOPage(products);
         }else {
             return null;
         }

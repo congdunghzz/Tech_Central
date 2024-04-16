@@ -128,7 +128,7 @@ public class OrderService {
     public Order updateStatus(Long orderId, OrderStatus status){
         Optional<Order> order = orderRepository.findById(orderId);
         if (order.isEmpty())
-            throw new NotFoundException("Order with id: " +orderId+ " is not found");;
+            throw new NotFoundException("Order with id: " +orderId+ " is not found");
         order.get().setOrderStatus(status);
         return orderRepository.save(order.get());
     }

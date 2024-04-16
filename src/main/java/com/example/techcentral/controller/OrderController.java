@@ -97,7 +97,6 @@ public class OrderController {
     @PutMapping("/{id}/status")
     public ResponseEntity<Order> updateStatusByAdmin(@PathVariable Long id,
                                                      @RequestBody OrderStatus status){
-
         Order order = orderService.updateStatus(id, status);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }

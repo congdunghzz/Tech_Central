@@ -55,7 +55,7 @@ public class AuthenticationService {
             if (createdUser != null){
 
                 String token = jwtTokenProvider.generateToken(new CustomUserDetail(createdUser));
-                return new AuthenticationResponse(token);
+                return new AuthenticationResponse(token, createdUser.getRole().name());
             }else {
                 throw new NotFoundException("Sign up falsely");
             }
@@ -71,7 +71,7 @@ public class AuthenticationService {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtTokenProvider.generateToken((CustomUserDetail) authentication.getPrincipal());
-        return new AuthenticationResponse(token);
+        return new AuthenticationResponse(token, ((CustomUserDetail) authentication.getPrincipal()).getUser().getRole().name());
     }
 
 }

@@ -95,7 +95,7 @@ public class ProductService {
         if (name.isBlank()){
             products = productRepository.findAll(pageable);
         }else {
-            products = productRepository.findAllByNameContainingIgnoreCase(name, pageable);
+            products = productRepository.findAllByNameStartingWithIgnoreCase(name, pageable);
         }
         return ProductMapper.TransferToProductDTOPage(products);
     }
@@ -282,17 +282,17 @@ public class ProductService {
         if (product.isEmpty()){
             throw new NotFoundException("Product with id: " +productId+ " is not found");
         }
+        List <ProductImage> productImages = product.get().getProductImages();
         if (imageList != null) {
             for (ProductImage img : imageList) {
-
                 try {
                     productImageService.deleteImg(img.getUrl());
-
-                    product.get().getProductImages().remove(img);
+                    productImages.remove(img);
                 } catch (IOException e) {
                     throw new NotFoundException("Image file was not removed, something went wrong !");
                 }
             }
+            product.get().setProductImages(productImages);
         }
         return ProductMapper.TransferToProductDTO(productRepository.save(product.get()));
     }

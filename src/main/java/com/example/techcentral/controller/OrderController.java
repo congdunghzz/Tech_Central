@@ -14,8 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +38,7 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrderForAdmin (
             @RequestParam(value = "status", required = false) String status){
-
+        System.out.println("OrderController: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         List<Order> result = orderService.findAllByStatus(status);
         return ResponseEntity.ok(result);
     }
@@ -117,11 +119,11 @@ public class OrderController {
         if (userId == -1L)
             throw new UnAuthorizedException("You are not permitted to do this action");
 
-        if (userService.getById(userId).role() == UserRole.ADMIN){
+        if (userService.getById(userId).role() == UserRole.ROLE_ADMIN){
             orderService.deleteOrderForAdmin(id);
             httpStatus = HttpStatus.OK;
         }
-        else if((userService.getById(userId).role() == UserRole.USER)){
+        else if((userService.getById(userId).role() == UserRole.ROLE_USER)){
             orderService.deleteOrderForCustomer(id, userId);
             httpStatus = HttpStatus.OK;
         }

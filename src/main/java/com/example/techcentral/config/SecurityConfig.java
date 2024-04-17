@@ -6,6 +6,7 @@ import com.example.techcentral.config.jwtConfig.TokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -49,9 +50,23 @@ public class SecurityConfig {
                         sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/order/**").authenticated()
-                        .requestMatchers("api/v1/user/**").authenticated()
-                        .anyRequest().permitAll())
+                        .requestMatchers(HttpMethod.POST, "/api/v1/category/**", "/api/v1/brand/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/category/**", "/api/v1/brand/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/category/**", "/api/v1/brand/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/order").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/order/user/{id}").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,"/api/v1/product/**", "/api/v1/category/**", "/api/v1/brand/**").permitAll()
+                        .requestMatchers("/api/v1/login", "/api/v1/register").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/api/v1/user/myProfile").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/user/myProfile").authenticated()
+                        .requestMatchers("/api/v1/user/**").hasRole("ADMIN")
+
+
+                        .anyRequest().authenticated()
+
+
+                )
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .build();

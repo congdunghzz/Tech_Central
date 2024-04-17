@@ -9,6 +9,7 @@ import com.example.techcentral.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,12 +26,14 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasRole(ADMIN)")
     public ResponseEntity<List<UserDTO>> getALlUser (){
         List<UserDTO> userDTOS = userService.getAllUser();
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole(ADMIN)")
     public ResponseEntity<UserDTO> getById (@PathVariable Long id){
         UserDTO userDTO = userService.getById(id);
 

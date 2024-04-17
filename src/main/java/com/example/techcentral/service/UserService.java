@@ -99,13 +99,13 @@ public class UserService implements UserDetailsService{
         if (user.isEmpty()) {
             throw new NotFoundException("User with id: "+userId+"is not found or this user is already a admin");
         }
-        user.get().setRole(UserRole.ADMIN);
+        user.get().setRole(UserRole.ROLE_ADMIN);
         User updatedUser = userRepository.save(user.get());
         return UserMapper.TransferToUserDTO(updatedUser);
     }
 
     public List<UserDTO> getAllAdmin(){
-        List<User> adminList = userRepository.findAllByUserRole(UserRole.ADMIN);
+        List<User> adminList = userRepository.findAllByUserRole(UserRole.ROLE_ADMIN);
         if (adminList.isEmpty())
             throw new NotFoundException("There is no admin");
         return UserMapper.TransferToUserDTOs(adminList);

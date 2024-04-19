@@ -27,7 +27,7 @@ public class Product {
     private double price;
 
     @Column(name = "PRODUCT_STOCK")
-    private double stock;
+    private int stock;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductImage> productImages;

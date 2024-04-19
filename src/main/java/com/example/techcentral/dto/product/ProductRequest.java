@@ -9,6 +9,7 @@ import java.util.List;
 public record ProductRequest(
         String name,
         double price,
+        int stock,
         ProductDetail productDetail,
         List<MultipartFile> images,
         String category,

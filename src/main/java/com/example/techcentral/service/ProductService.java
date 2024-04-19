@@ -153,6 +153,7 @@ public class ProductService {
         Product product = Product.builder()
                 .name(request.name())
                 .price(request.price())
+                .stock(request.stock())
                 .productDetail(request.productDetail())
                 .build();
 
@@ -221,6 +222,7 @@ public class ProductService {
         Product updatedProduct = product.get();
         updatedProduct.setName(productDTO.name());
         updatedProduct.setPrice(productDTO.price());
+        updatedProduct.setStock(productDTO.stock());
         // check category if it is present
         Optional<Category> category = categoryRepository.findByName(productDTO.category());
         // if category is present, set it for product. if it is not, break the function

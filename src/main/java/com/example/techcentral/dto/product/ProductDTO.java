@@ -10,6 +10,7 @@ public record ProductDTO(
         Long id,
         String name,
         double price,
+        int stock,
         List<ProductImage> productImages,
         ProductDetail productDetail,
         String category,

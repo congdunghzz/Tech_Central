@@ -71,7 +71,6 @@ public class UserController {
     public ResponseEntity<UserDTO> editInfo(
             @CurrentSecurityContext(expression="authentication") Authentication authentication,
             @RequestBody UserRegisterRequest request){
-        System.out.println("User Controller: request: " + request);
         Long userId = null;
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             CustomUserDetail user = (CustomUserDetail) authentication.getPrincipal();

@@ -38,7 +38,6 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrderForAdmin (
             @RequestParam(value = "status", required = false) String status){
-        System.out.println("OrderController: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         List<Order> result = orderService.findAllByStatus(status);
         return ResponseEntity.ok(result);
     }

@@ -1,6 +1,7 @@
 package com.example.techcentral.service;
 
 import com.example.techcentral.ExceptionHandler.NotFoundException;
+import com.example.techcentral.ExceptionHandler.ProductStockException;
 import com.example.techcentral.ExceptionHandler.UnAuthorizedException;
 import com.example.techcentral.dao.OrderRepository;
 import com.example.techcentral.dao.ProductRepository;
@@ -92,6 +93,8 @@ public class OrderService {
         Order newOrder = new Order();
         newOrder.setUser(user.get());
         List<OrderDetail> details = new ArrayList<>();
+
+        List<Product> products = new ArrayList<>();
         double totalCost = 0;
 
         // get order detail list
@@ -102,6 +105,8 @@ public class OrderService {
             //check product if it is present
             if (product.isEmpty())
                 throw new NotFoundException("Product with id: " +item.productId()+ " is not found");
+            products.add(product.get());
+
             totalCost += product.get().getPrice() * item.amount();
             details.add(OrderDetail
                     .builder()
@@ -122,13 +127,41 @@ public class OrderService {
         newOrder.setOrderDetails(details);
 
         user.get().getOrders().add(newOrder);
+
+        products.forEach(product -> {
+            int quantityOfItem = 0;
+
+            for (OrderDetailRequestDTO item : request.getOrderDetailRequestDTOs()) {
+
+                if (product.getId().equals(item.productId())){
+                    if (product.getStock() < item.amount()){
+                        throw new ProductStockException("The product is out of stock");
+                    }
+                    quantityOfItem = item.amount();
+                    break;
+                }
+            }
+            product.setStock(product.getStock() - quantityOfItem);
+            productRepository.save(product);
+        });
         return orderRepository.save(newOrder);
     }
 
     public Order updateStatus(Long orderId, OrderStatus status){
+
         Optional<Order> order = orderRepository.findById(orderId);
         if (order.isEmpty())
             throw new NotFoundException("Order with id: " +orderId+ " is not found");
+        if (order.get().getOrderStatus() == status) return null;
+
+        if (status == OrderStatus.CANCELED){
+            order.get().getOrderDetails().forEach(detail ->{
+                Product product = productRepository.findById(detail.getProductId()).get();
+                product.setStock(product.getStock() + detail.getAmount());
+                productRepository.save(product);
+            });
+        }
+
         order.get().setOrderStatus(status);
         return orderRepository.save(order.get());
     }

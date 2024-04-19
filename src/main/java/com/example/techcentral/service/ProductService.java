@@ -113,7 +113,6 @@ public class ProductService {
         Pageable pageable = PageRequest.of(page-1, size);
         boolean hasCategory = !category.isBlank();
         boolean hasBrand = !brand.isBlank();
-        System.out.println("Product Service: get product by cate and brand: " + hasCategory + " " + hasBrand);
 
         if(!hasCategory && !hasBrand){
             products = productRepository.findAll(pageable);
@@ -212,6 +211,7 @@ public class ProductService {
     }
 
     public ProductDTO editProduct(Long id,ProductDTO productDTO){
+        System.out.println(productDTO);
         ProductDTO result;
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()){
@@ -236,7 +236,7 @@ public class ProductService {
         // if category is present, set it for product. if it is not, break the function
         if (brand.isPresent()){
             if (!brand.get().getName().equals(updatedProduct.getCategory().getName()))
-                updatedProduct.setCategory(category.get());
+                updatedProduct.setBrand(brand.get());
         }else {
             throw new NotFoundException("Brand with name: " +productDTO.brand()+ " is not found");
         }

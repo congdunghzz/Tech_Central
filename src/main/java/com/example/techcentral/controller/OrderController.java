@@ -42,7 +42,7 @@ public class OrderController {
             @RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "page", required = false) Optional<Integer> page,
             @RequestParam(value = "size", required = false) Optional<Integer> size){
-        Page<Order> result = orderService.findAllByStatus(status, page.orElse(0), size.orElse(999));
+        Page<Order> result = orderService.findAllByStatus(status, page.orElse(1), size.orElse(999));
         return ResponseEntity.ok(result);
     }
     @GetMapping("/user/{id}")

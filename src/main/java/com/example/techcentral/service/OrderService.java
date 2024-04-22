@@ -47,7 +47,7 @@ public class OrderService {
     }
 
     public Page<Order> findAll (int page, int size){
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page - 1, size);
         return orderRepository.findAllByOrderByOrderDateDesc(pageable);
     }
 
@@ -57,7 +57,7 @@ public class OrderService {
 
     //PROCESSING, SHIPPING ,FINISHED, CANCELED
     public Page<Order> findAllByStatus(String status, int page, int size){
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page - 1, size);
         OrderStatus st;
         switch (status.toUpperCase()){
             case "PROCESSING": {

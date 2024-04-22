@@ -14,6 +14,9 @@ import com.example.techcentral.models.OrderDetail;
 import com.example.techcentral.models.Product;
 import com.example.techcentral.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -43,8 +46,9 @@ public class OrderService {
         return result.get();
     }
 
-    public List<Order> findAll (){
-        return orderRepository.findAllByOrderByOrderDateDesc();
+    public Page<Order> findAll (int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return orderRepository.findAllByOrderByOrderDateDesc(pageable);
     }
 
     public List<Order> findAllByUser(Long userId){
@@ -52,7 +56,8 @@ public class OrderService {
     }
 
     //PROCESSING, SHIPPING ,FINISHED, CANCELED
-    public List<Order> findAllByStatus(String status){
+    public Page<Order> findAllByStatus(String status, int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
         OrderStatus st;
         switch (status.toUpperCase()){
             case "PROCESSING": {
@@ -77,9 +82,9 @@ public class OrderService {
             }
         }
         if (st == null){
-            return orderRepository.findAllByOrderByOrderDateDesc();
+            return orderRepository.findAllByOrderByOrderDateDesc(pageable);
         }
-        return orderRepository.findByOrderStatusOrderByOrderDateDesc(st);
+        return orderRepository.findByOrderStatusOrderByOrderDateDesc(st, pageable);
     }
 
 

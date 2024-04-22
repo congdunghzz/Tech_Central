@@ -12,6 +12,7 @@ import com.example.techcentral.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/order")
@@ -36,9 +38,11 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrderForAdmin (
-            @RequestParam(value = "status", required = false) String status){
-        List<Order> result = orderService.findAllByStatus(status);
+    public ResponseEntity<Page<Order>> getAllOrderForAdmin (
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "page", required = false) Optional<Integer> page,
+            @RequestParam(value = "size", required = false) Optional<Integer> size){
+        Page<Order> result = orderService.findAllByStatus(status, page.orElse(0), size.orElse(999));
         return ResponseEntity.ok(result);
     }
     @GetMapping("/user/{id}")

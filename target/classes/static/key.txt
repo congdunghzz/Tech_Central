@@ -1,0 +1,5 @@
+    Jwt key
+
+    private static final String KEY = "fCeDw+hIGGCwSVFo0Y883e3iko8s4huUSqDswc8mXk6xFyTnof0ihw==";
+
+    private static final long EXPIRATION = 1000L * 60 * 60 * 24 * 60;

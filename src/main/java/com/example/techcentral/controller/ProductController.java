@@ -126,9 +126,10 @@ public class ProductController {
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}/image")
+    @PutMapping("/{id}/image")
     public ResponseEntity<ProductDTO> deleteProductImage(@PathVariable Long id,
                                                         @RequestBody List<ProductImage> images){
+        System.out.println(images);
         ProductDTO product = productService.deleteImages(id, images);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }

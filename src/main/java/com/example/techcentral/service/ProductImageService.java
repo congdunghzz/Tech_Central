@@ -43,8 +43,11 @@ public class ProductImageService {
         try{
 
             imageService.delete(imgUrl);
-            productImageRepository.deleteByUrl(imgUrl);
-
+            try{
+                productImageRepository.deleteByUrl(imgUrl);
+            }catch (Exception e){
+                System.out.println("deleted in firebase but Can NOT delete image in database");
+            }
 
 
         }catch (Exception e){

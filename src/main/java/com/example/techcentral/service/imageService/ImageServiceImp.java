@@ -78,7 +78,7 @@ public class ImageServiceImp implements ImageService {
         if (blob == null) {
             throw new NotFoundException("file not found");
         }
-        System.out.println("Deleted");
+
         blob.delete();
 
     }

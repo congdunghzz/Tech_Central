@@ -211,7 +211,6 @@ public class ProductService {
     }
 
     public ProductDTO editProduct(Long id,ProductDTO productDTO){
-        System.out.println(productDTO);
         ProductDTO result;
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()){
@@ -280,6 +279,7 @@ public class ProductService {
     ///         NOT WORKING
 
     public ProductDTO deleteImages (Long productId, List<ProductImage> imageList){
+
         Optional<Product> product = productRepository.findById(productId);
         if (product.isEmpty()){
             throw new NotFoundException("Product with id: " +productId+ " is not found");
